@@ -123,7 +123,7 @@ Version: 4.7.1
                                             </a>
                                             <ul class="dropdown-menu pull-left">
                                                 <li aria-haspopup="true">
-                                                    <a href="?Modulo=Presupuestos" class="nav-link">Presupuestos</a>
+                                                    <a href="?Modulo=Presupuesto" class="nav-link">Presupuestos</a>
                                                 </li>
                                                 <li aria-haspopup="true">
                                                     <a href="?Modulo=Facturas" class="nav-link">Facturas</a>
@@ -337,6 +337,10 @@ Version: 4.7.1
 							    		include("clientes.php");	
 							    		break;
 							    		
+							    		case 'Presupuesto':
+							    		include("presupuesto.php");	
+							    		break;
+							    		
 							    		/* Facturacion */
 							    		
 							    		case 'Facturacion':
@@ -394,6 +398,7 @@ Version: 4.7.1
         <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
         <!-- END CORE PLUGINS -->
         <!-- BEGIN PAGE LEVEL PLUGINS -->
+        <script src="assets/autosize.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-sweetalert/sweetalert.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/moment.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-daterangepicker/daterangepicker.min.js" type="text/javascript"></script>
@@ -414,12 +419,12 @@ Version: 4.7.1
         
         <script src="assets/global/plugins/echarts/echarts.js" type="text/javascript"></script>
         
-        
         <!-- END PAGE LEVEL PLUGINS -->
         <!-- BEGIN THEME GLOBAL SCRIPTS -->
         <script src="assets/global/scripts/app.js" type="text/javascript"></script>
         
         <!-- END THEME GLOBAL SCRIPTS -->
+
         <script src="assets/pages/scripts/components-date-time-pickers.js" type="text/javascript"></script>
         <script src="assets/pages/scripts/components-select2.js" type="text/javascript"></script>
         <script src="assets/pages/scripts/components-bootstrap-select.min.js" type="text/javascript"></script>
@@ -428,12 +433,15 @@ Version: 4.7.1
         <script src="assets/layouts/layout3/scripts/layout.min.js" type="text/javascript"></script>
         <script src="assets/layouts/layout3/scripts/demo.min.js" type="text/javascript"></script>
         <script src="assets/layouts/global/scripts/quick-nav.min.js" type="text/javascript"></script>
+        <script src="assets/jquery.alphanumeric.js" type="text/javascript"></script>
         <!-- END THEME LAYOUT SCRIPTS -->
         <script>
 	        $(function(){
 	        	$('.quick-sidebar-toggler').click(function(){
 		        	window.open("login.php", "_self");
 	        	});
+	        	
+	        	$('.numero').numeric({allow:"."});
 	        });
 	    </script>
     </body>
