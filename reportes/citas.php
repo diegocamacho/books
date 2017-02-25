@@ -23,17 +23,17 @@ $fecha2="2016-12-30";
 */
 //Cabecera
 //Citas atendidas
-$sql="SELECT id_cita FROM citas WHERE id_clinica='$id_clinica' AND DATE(fecha_hora) BETWEEN '$fecha1' AND '$fecha2' AND atendida=1";
+$sql="SELECT id_cita FROM citas WHERE citas.tipo=1 AND id_clinica='$id_clinica' AND DATE(fecha_hora) BETWEEN '$fecha1' AND '$fecha2' AND atendida=1";
 $q=mysql_query($sql);
 $citas_atendidas=mysql_num_rows($q);
 //Citas totales
-$sql="SELECT id_cita FROM citas WHERE id_clinica='$id_clinica' AND DATE(fecha_hora) BETWEEN '$fecha1' AND '$fecha2'";
+$sql="SELECT id_cita FROM citas WHERE citas.tipo=1 AND id_clinica='$id_clinica' AND DATE(fecha_hora) BETWEEN '$fecha1' AND '$fecha2'";
 $q=mysql_query($sql);
 $citas_totales=mysql_num_rows($q);
 //Citas nuevas
 $sql="SELECT id_cita, pacientes.fecha_registro FROM citas 
 JOIN pacientes ON pacientes.id_paciente=citas.id_paciente
-WHERE id_clinica='$id_clinica' AND DATE(fecha_registro) BETWEEN '$fecha1' AND '$fecha2'";
+WHERE citas.tipo=1 AND id_clinica='$id_clinica' AND DATE(fecha_registro) BETWEEN '$fecha1' AND '$fecha2'";
 $q=mysql_query($sql);
 $nuevas_citas=mysql_num_rows($q);
 
@@ -43,7 +43,7 @@ $porcentaje_general=($citas_atendidas*100)/$citas_totales;
 $sql = "SELECT pacientes.fecha_registro, citas.atendida, canales.canal FROM citas
 JOIN pacientes ON pacientes.id_paciente=citas.id_paciente
 LEFT JOIN canales ON canales.id_canal=pacientes.id_canal
-WHERE citas.id_clinica='$id_clinica' AND DATE(citas.fecha_hora) BETWEEN '$fecha1' AND '$fecha2'";
+WHERE citas.tipo=1 AND citas.id_clinica='$id_clinica' AND DATE(citas.fecha_hora) BETWEEN '$fecha1' AND '$fecha2'";
 
 $q = mysql_query($sql);
 $citas = array();

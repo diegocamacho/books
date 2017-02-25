@@ -44,7 +44,7 @@ $fecha2=strtotime($fecha2);
 	for($i=$fecha1; $i <= $fecha2; $i = $i + 86400){
 		$fecha=date('Y-m-d',$i);
 		
-		$sql="SELECT id_cita FROM citas WHERE DATE(fecha_hora) = '$fecha'";
+		$sql="SELECT id_cita FROM citas WHERE citas.tipo=1 AND DATE(fecha_hora) = '$fecha'";
 		$q=mysql_query($sql);
 		$cuantos=mysql_num_rows($q);
 	

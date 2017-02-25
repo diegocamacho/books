@@ -16,73 +16,76 @@ $val=count($empresas);
 	cursor: pointer;
 }
 </style>
-
-<div class="page-content-inner">
-	<div class="row">
-		<div class="col-md-12">
-			<!-- Confirmación -->
-			  <? if($_GET['msg']==1){ ?>
-			  		<br>
-			  		<div class="alert alert-dismissable alert-success">
-				  		<button type="button" class="close" data-dismiss="alert">×</button>
-				  		<p>La empresa se ha agregado</p>
-				  	</div>
-			  <? }if($_GET['msg']==2){ ?>
-			  		<br>
-			  		<div class="alert alert-dismissable alert-info">
-				  		<button type="button" class="close" data-dismiss="alert">×</button>
-				  		<p>La empresa se ha editado</p>
-				  	</div>
-			  <? } ?>
-			  <!-- Contenido -->
-			<!-- BEGIN EXAMPLE TABLE PORTLET-->
-			<div class="portlet light  portlet-fit">
-				<div class="portlet-title">
-					<div class="caption">
-						<i class="icon-globe font-dark"></i>
-						<span class="caption-subject font-dark bold uppercase">Empresas</span>
+<div class="page-content">
+	<div class="container">    
+		<div class="page-content-inner">
+			<div class="row">
+				<div class="col-md-12">
+					<!-- Confirmación -->
+					  <? if($_GET['msg']==1){ ?>
+					  		<br>
+					  		<div class="alert alert-dismissable alert-success">
+						  		<button type="button" class="close" data-dismiss="alert">×</button>
+						  		<p>La empresa se ha agregado</p>
+						  	</div>
+					  <? }if($_GET['msg']==2){ ?>
+					  		<br>
+					  		<div class="alert alert-dismissable alert-info">
+						  		<button type="button" class="close" data-dismiss="alert">×</button>
+						  		<p>La empresa se ha editado</p>
+						  	</div>
+					  <? } ?>
+					  <!-- Contenido -->
+					<!-- BEGIN EXAMPLE TABLE PORTLET-->
+					<div class="portlet light  portlet-fit">
+						<div class="portlet-title">
+							<div class="caption">
+								<i class="icon-globe font-dark"></i>
+								<span class="caption-subject font-dark bold uppercase">Empresas</span>
+							</div>
+							<div class="actions btn-set">
+								<a href="javascript:;" class="btn btn-sm blue-chambray " data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#nuevaEmpresa"><i class="fa fa-plus"></i> Agregar empresa </a>
+							</div>
+						</div>
+						<div class="portlet-body">
+							<? if($val>0): ?>
+							<table class="table table-striped table-bordered table-hover">
+								<thead>
+							        <tr>
+							          <th>Empresa</th>
+							          <th width="150"></th>
+							        </tr>
+							    </thead>
+							    <tbody>
+								    <? foreach($empresas as $empresa): ?>  
+							        <tr>
+										<td><?=$empresa->empresa?></td>
+										<td align="right">
+		
+											<img src="assets/global/img/loading-spinner-grey.gif" border="0" id="load_<?=$empresa->id_empresa?>" width="19" class="oculto" />
+											<? if($empresa->activo==1): ?>
+												<a role="button" class="btn green btn-xs btn_<?=$empresa->id_empresa?>" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#editaEmpresa" data-id="<?=$empresa->id_empresa?>">Editar</a>
+												<a role="button" class="btn red btn-xs btn_<?=$empresa->id_empresa?>" onclick="javascript:Desactiva(<?=$empresa->id_empresa?>)">Desactivar</a>
+											<? else: ?>
+												<a role="button" class="btn btn-warning btn-xs btn_<?=$empresa->id_empresa?>" onclick="javascript:Activa(<?=$empresa->id_empresa?>)">Activar</a>
+											<? endif; ?>
+											
+										</td>
+							        </tr>
+							        <? endforeach ?>
+							    </tbody>
+							</table>
+							<? else: ?>
+							<div class="alert alert-dismissable alert-warning">
+						  		<button type="button" class="close" data-dismiss="alert">×</button>
+						  		<p>Aún no se han creado empresas</p>
+						  	</div>
+							<? endif; ?>
+						</div>
 					</div>
-					<div class="actions btn-set">
-						<a href="javascript:;" class="btn btn-sm blue-chambray " data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#nuevaEmpresa"><i class="fa fa-plus"></i> Agregar empresa </a>
-					</div>
-				</div>
-				<div class="portlet-body">
-					<? if($val>0): ?>
-					<table class="table table-striped table-bordered table-hover">
-						<thead>
-					        <tr>
-					          <th>Empresa</th>
-					          <th width="150"></th>
-					        </tr>
-					    </thead>
-					    <tbody>
-						    <? foreach($empresas as $empresa): ?>  
-					        <tr>
-								<td><?=$empresa->empresa?></td>
-								<td align="right">
-
-									<img src="assets/global/img/loading-spinner-grey.gif" border="0" id="load_<?=$empresa->id_empresa?>" width="19" class="oculto" />
-									<? if($empresa->activo==1): ?>
-										<a role="button" class="btn green btn-xs btn_<?=$empresa->id_empresa?>" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#editaEmpresa" data-id="<?=$empresa->id_empresa?>">Editar</a>
-										<a role="button" class="btn red btn-xs btn_<?=$empresa->id_empresa?>" onclick="javascript:Desactiva(<?=$empresa->id_empresa?>)">Desactivar</a>
-									<? else: ?>
-										<a role="button" class="btn btn-warning btn-xs btn_<?=$empresa->id_empresa?>" onclick="javascript:Activa(<?=$empresa->id_empresa?>)">Activar</a>
-									<? endif; ?>
-									
-								</td>
-					        </tr>
-					        <? endforeach ?>
-					    </tbody>
-					</table>
-					<? else: ?>
-					<div class="alert alert-dismissable alert-warning">
-				  		<button type="button" class="close" data-dismiss="alert">×</button>
-				  		<p>Aún no se han creado empresas</p>
-				  	</div>
-					<? endif; ?>
+					<!-- END EXAMPLE TABLE PORTLET-->
 				</div>
 			</div>
-			<!-- END EXAMPLE TABLE PORTLET-->
 		</div>
 	</div>
 </div>

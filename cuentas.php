@@ -31,78 +31,82 @@ $valida_empresas=count($empresas);
 }
 </style>
 
-<div class="page-content-inner">
-	<div class="row">
-		<div class="col-md-12">
-			<!-- Confirmación -->
-			  <? if($_GET['msg']==1){ ?>
-			  		<br>
-			  		<div class="alert alert-dismissable alert-success">
-				  		<button type="button" class="close" data-dismiss="alert">×</button>
-				  		<p>La cuenta se ha agregado</p>
-				  	</div>
-			  <? }if($_GET['msg']==2){ ?>
-			  		<br>
-			  		<div class="alert alert-dismissable alert-info">
-				  		<button type="button" class="close" data-dismiss="alert">×</button>
-				  		<p>La cuenta se ha editado</p>
-				  	</div>
-			  <? } ?>
-			  <!-- Contenido -->
-			<!-- BEGIN EXAMPLE TABLE PORTLET-->
-			<div class="portlet light  portlet-fit">
-				<div class="portlet-title">
-					<div class="caption">
-						<i class="icon-wallet font-dark"></i>
-						<span class="caption-subject font-dark bold uppercase">Cuentas</span>
+<div class="page-content">
+	<div class="container">    
+		<div class="page-content-inner">
+			<div class="row">
+				<div class="col-md-12">
+					<!-- Confirmación -->
+					  <? if($_GET['msg']==1){ ?>
+					  		<br>
+					  		<div class="alert alert-dismissable alert-success">
+						  		<button type="button" class="close" data-dismiss="alert">×</button>
+						  		<p>La cuenta se ha agregado</p>
+						  	</div>
+					  <? }if($_GET['msg']==2){ ?>
+					  		<br>
+					  		<div class="alert alert-dismissable alert-info">
+						  		<button type="button" class="close" data-dismiss="alert">×</button>
+						  		<p>La cuenta se ha editado</p>
+						  	</div>
+					  <? } ?>
+					  <!-- Contenido -->
+					<!-- BEGIN EXAMPLE TABLE PORTLET-->
+					<div class="portlet light  portlet-fit">
+						<div class="portlet-title">
+							<div class="caption">
+								<i class="icon-wallet font-dark"></i>
+								<span class="caption-subject font-dark bold uppercase">Cuentas</span>
+							</div>
+							<div class="actions btn-set">
+								<a href="javascript:;" class="btn btn-sm blue-chambray " data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#nuevaCuenta"><i class="fa fa-plus"></i> Agregar Cuenta </a>
+							</div>
+						</div>
+						<div class="portlet-body">
+							<? if($val>0): ?>
+							<table class="table table-striped table-bordered table-hover">
+								<thead>
+							        <tr>
+								        <th>Empresa</th>
+										<th>Alias</th>
+										<th width="100">Tipo</th>
+										<th width="150"></th>
+							        </tr>
+							      </thead>
+							      <tbody>
+							        <? foreach($cuentas as $cuenta): ?>  
+							        <tr>
+								        <td><?=$cuenta->empresa?></td>
+										<td><?=$cuenta->alias?></td>
+										<td><?=dameTipo($cuenta->tipo_cuenta)?></td>
+										<td align="right">
+											<? if($cuenta->eliminable==1): ?><!-- Solo se van a poder eliminar y editar las cuentas que seleccione el usuario -->
+												<img src="assets/global/img/loading-spinner-grey.gif" border="0" id="load_<?=$cuenta->id_cuenta?>" width="19" class="oculto" />
+												<? if($cuenta->activo==1): ?>
+													<a role="button" class="btn green btn-xs btn_<?=$cuenta->id_cuenta?>" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#editaCuenta" data-id="<?=$cuenta->id_cuenta?>">Editar</a>
+													<a role="button" class="btn red btn-xs btn_<?=$cuenta->id_cuenta?>" onclick="javascript:Desactiva(<?=$cuenta->id_cuenta?>)">Desactivar</a>
+												<? else: ?>
+													<a role="button" class="btn btn-warning btn-xs btn_<?=$cuenta->id_cuenta?>" onclick="javascript:Activa(<?=$cuenta->id_cuenta?>)">Activar</a>
+												<? endif; ?>
+											<? else: ?>
+											<label class="text-muted"> Predeterminada </label>
+											<? endif; ?>
+										</td>
+							        </tr>
+							        <? endforeach ?>
+							      </tbody>
+							</table>
+							<? else: ?>
+							<div class="alert alert-dismissable alert-warning">
+						  		<button type="button" class="close" data-dismiss="alert">×</button>
+						  		<p>Aún no se han creado cuentas</p>
+						  	</div>
+							<? endif; ?>
+						</div>
 					</div>
-					<div class="actions btn-set">
-						<a href="javascript:;" class="btn btn-sm blue-chambray " data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#nuevaCuenta"><i class="fa fa-plus"></i> Agregar Cuenta </a>
-					</div>
-				</div>
-				<div class="portlet-body">
-					<? if($val>0): ?>
-					<table class="table table-striped table-bordered table-hover">
-						<thead>
-					        <tr>
-						        <th>Empresa</th>
-								<th>Alias</th>
-								<th width="100">Tipo</th>
-								<th width="150"></th>
-					        </tr>
-					      </thead>
-					      <tbody>
-					        <? foreach($cuentas as $cuenta): ?>  
-					        <tr>
-						        <td><?=$cuenta->empresa?></td>
-								<td><?=$cuenta->alias?></td>
-								<td><?=dameTipo($cuenta->tipo_cuenta)?></td>
-								<td align="right">
-									<? if($cuenta->eliminable==1): ?><!-- Solo se van a poder eliminar y editar las cuentas que seleccione el usuario -->
-										<img src="assets/global/img/loading-spinner-grey.gif" border="0" id="load_<?=$cuenta->id_cuenta?>" width="19" class="oculto" />
-										<? if($cuenta->activo==1): ?>
-											<a role="button" class="btn green btn-xs btn_<?=$cuenta->id_cuenta?>" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#editaCuenta" data-id="<?=$cuenta->id_cuenta?>">Editar</a>
-											<a role="button" class="btn red btn-xs btn_<?=$cuenta->id_cuenta?>" onclick="javascript:Desactiva(<?=$cuenta->id_cuenta?>)">Desactivar</a>
-										<? else: ?>
-											<a role="button" class="btn btn-warning btn-xs btn_<?=$cuenta->id_cuenta?>" onclick="javascript:Activa(<?=$cuenta->id_cuenta?>)">Activar</a>
-										<? endif; ?>
-									<? else: ?>
-									<label class="text-muted"> Predeterminada </label>
-									<? endif; ?>
-								</td>
-					        </tr>
-					        <? endforeach ?>
-					      </tbody>
-					</table>
-					<? else: ?>
-					<div class="alert alert-dismissable alert-warning">
-				  		<button type="button" class="close" data-dismiss="alert">×</button>
-				  		<p>Aún no se han creado cuentas</p>
-				  	</div>
-					<? endif; ?>
+					<!-- END EXAMPLE TABLE PORTLET-->
 				</div>
 			</div>
-			<!-- END EXAMPLE TABLE PORTLET-->
 		</div>
 	</div>
 </div>

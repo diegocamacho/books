@@ -30,80 +30,82 @@ endwhile;
 	cursor: pointer;
 }
 </style>
-
-<div class="page-content-inner">
-	<div class="row">
-		<div class="col-md-12">
-			<!-- Confirmación -->
-			  <? if($_GET['msg']==1){ ?>
-			  		<br>
-			  		<div class="alert alert-dismissable alert-success">
-				  		<button type="button" class="close" data-dismiss="alert">×</button>
-				  		<p>El proveedor se ha agregado</p>
-				  	</div>
-			  <? }if($_GET['msg']==2){ ?>
-			  		<br>
-			  		<div class="alert alert-dismissable alert-info">
-				  		<button type="button" class="close" data-dismiss="alert">×</button>
-				  		<p>El proveedor se ha editado</p>
-				  	</div>
-			  <? } ?>
-			  <!-- Contenido -->
-			<!-- BEGIN EXAMPLE TABLE PORTLET-->
-			<div class="portlet light  portlet-fit">
-				<div class="portlet-title">
-					<div class="caption">
-						<i class="icon-briefcase font-dark"></i>
-						<span class="caption-subject font-dark bold uppercase">Proveedores</span>
+<div class="page-content">
+	<div class="container">    
+		<div class="page-content-inner">
+			<div class="row">
+				<div class="col-md-12">
+					<!-- Confirmación -->
+					  <? if($_GET['msg']==1){ ?>
+					  		<br>
+					  		<div class="alert alert-dismissable alert-success">
+						  		<button type="button" class="close" data-dismiss="alert">×</button>
+						  		<p>El proveedor se ha agregado</p>
+						  	</div>
+					  <? }if($_GET['msg']==2){ ?>
+					  		<br>
+					  		<div class="alert alert-dismissable alert-info">
+						  		<button type="button" class="close" data-dismiss="alert">×</button>
+						  		<p>El proveedor se ha editado</p>
+						  	</div>
+					  <? } ?>
+					  <!-- Contenido -->
+					<!-- BEGIN EXAMPLE TABLE PORTLET-->
+					<div class="portlet light  portlet-fit">
+						<div class="portlet-title">
+							<div class="caption">
+								<i class="icon-briefcase font-dark"></i>
+								<span class="caption-subject font-dark bold uppercase">Proveedores</span>
+							</div>
+							<div class="actions btn-set">
+								<a href="javascript:;" class="btn btn-sm blue-chambray " data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#nuevoProveedor"><i class="fa fa-plus"></i> Agregar proveedor </a>
+							</div>
+						</div>
+						<div class="portlet-body">
+							<? if($val>0): ?>
+							<table class="table table-striped table-bordered table-hover">
+								<thead>
+							        <tr>
+							          <th>Proveedor</th>
+							          <th>Representante</th>
+							          <th>Empresa</th>
+							          <th>Teléfono</th>
+							          <th>Email</th>
+							          <th width="150"></th>
+							        </tr>
+							      </thead>
+							      <tbody>
+								    <? foreach($proveedores as $proveedor): ?>  
+							        <tr>
+										<td><?=$proveedor->proveedor?></td>
+										<td><?=$proveedor->representante?></td>
+										<td><? if($proveedor->id_empresa==0): echo "TODAS"; else: echo $proveedor->empresa; endif;?></td>
+										<td><?=$proveedor->telefono?></td>
+										<td><?=$proveedor->email?></td>
+										<td align="right">
+											<a role="button" class="btn blue btn-xs btn_<?=$proveedor->id_proveedor?>" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#editaProveedor" data-id="<?=$proveedor->id_proveedor?>">Editar</a>
+											<a role="button" class="btn red btn-xs btn_<?=$proveedor->id_proveedor?>" onclick="javascript:Desactiva(<?=$proveedor->id_proveedor?>)">Desactivar</a>
+											<!--<a role="button" class="btn  default btn-xs btn_<?=$proveedor->id_proveedor?>" onclick="javascript:s(<?=$proveedor->id_proveedor?>)">Historial</a>-->
+										</td>
+							        </tr>
+							        <? endforeach; ?>
+							        
+							      </tbody>
+							</table>
+							<? else: ?>
+							<div class="alert alert-dismissable alert-warning">
+						  		<button type="button" class="close" data-dismiss="alert">×</button>
+						  		<p>Aún no se han creado proveedores</p>
+						  	</div>
+							<? endif; ?>
+						</div>
 					</div>
-					<div class="actions btn-set">
-						<a href="javascript:;" class="btn btn-sm blue-chambray " data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#nuevoProveedor"><i class="fa fa-plus"></i> Agregar proveedor </a>
-					</div>
-				</div>
-				<div class="portlet-body">
-					<? if($val>0): ?>
-					<table class="table table-striped table-bordered table-hover">
-						<thead>
-					        <tr>
-					          <th>Proveedor</th>
-					          <th>Representante</th>
-					          <th>Empresa</th>
-					          <th>Teléfono</th>
-					          <th>Email</th>
-					          <th width="150"></th>
-					        </tr>
-					      </thead>
-					      <tbody>
-						    <? foreach($proveedores as $proveedor): ?>  
-					        <tr>
-								<td><?=$proveedor->proveedor?></td>
-								<td><?=$proveedor->representante?></td>
-								<td><? if($proveedor->id_empresa==0): echo "TODAS"; else: echo $proveedor->empresa; endif;?></td>
-								<td><?=$proveedor->telefono?></td>
-								<td><?=$proveedor->email?></td>
-								<td align="right">
-									<a role="button" class="btn blue btn-xs btn_<?=$proveedor->id_proveedor?>" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#editaProveedor" data-id="<?=$proveedor->id_proveedor?>">Editar</a>
-									<a role="button" class="btn red btn-xs btn_<?=$proveedor->id_proveedor?>" onclick="javascript:Desactiva(<?=$proveedor->id_proveedor?>)">Desactivar</a>
-									<!--<a role="button" class="btn  default btn-xs btn_<?=$proveedor->id_proveedor?>" onclick="javascript:s(<?=$proveedor->id_proveedor?>)">Historial</a>-->
-								</td>
-					        </tr>
-					        <? endforeach; ?>
-					        
-					      </tbody>
-					</table>
-					<? else: ?>
-					<div class="alert alert-dismissable alert-warning">
-				  		<button type="button" class="close" data-dismiss="alert">×</button>
-				  		<p>Aún no se han creado proveedores</p>
-				  	</div>
-					<? endif; ?>
+					<!-- END EXAMPLE TABLE PORTLET-->
 				</div>
 			</div>
-			<!-- END EXAMPLE TABLE PORTLET-->
 		</div>
 	</div>
 </div>
-
 
 
 

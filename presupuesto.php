@@ -27,191 +27,193 @@ endwhile;
 	background-color: #f7f8fa;
 }
 </style>
-<!--<h3>Dentista Books</h3>-->
-<div class="page-content-inner">
-
-	<div class="row">
-		<div class="col-md-12">
-	        <!-- BEGIN BORDERED TABLE PORTLET-->
-	        <div class="portlet light portlet-fit ">
-	            <div class="portlet-title">
-	                <div class="caption">
-	                    <i class="icon-doc font-dark"></i>
-	                    <span class="caption-subject font-dark sbold uppercase">Presupuesto (Cotización)</span>
-	                </div>
-	                <div class="actions">
-		                
-	                    <!--<a href="#" class="btn btn-sm blue-chambray "><i class="fa fa-plus"></i> Cancelar </a>-->
-	                    
-	                </div>
-	            </div>
-	            <div class="portlet-body">
-
-						<div class="form-body">
-			                
-			                <form id="frm_guarda" class="form-horizontal">
-				            
-				            <div class="form-group">
-								<label for="id_cliente" class="col-md-2 control-label">Empresa emisora</label>
-								<div class="col-md-6">
-									<select class="form-control select2" name="id_cliente" id="id_cliente" >
-										<option value="0" >Seleccione</option>
-										<? foreach($empresas as $empresa): ?>
-										<option value="<?=$empresa->id_empresa?>"><?=$empresa->empresa?></option>
-										<? endforeach; ?>
-									</select>
-								</div>
-							</div>
-							<hr>
-							<div class="form-group">
-								<label for="id_cliente" class="col-md-2 control-label">Seleccione el cliente</label>
-								<div class="col-md-6">
-									<select class="form-control select2" name="id_cliente" id="id_cliente" >
-										<option value="0" >Seleccione</option>
-										<? foreach($clientes as $cliente): ?>
-										<option value="<?=$cliente->id_cliente?>"><?=$cliente->cliente?></option>
-										<? endforeach; ?>
-										<option value="NUEVO">NUEVO CLIENTE</option>
-									</select>
-								</div>
-							</div>
-							
-							<hr>
-
-							<div class="form-group">
-								<label for="nombre" class="col-md-2 control-label">Referencia</label>
-								<div class="col-md-4">
-									<input type="text" maxlength="64" class="form-control dat" name="nombre" autocomplete="off">
-								</div>
-							</div>
-							
-							<div class="form-group">
-								<label for="nombre" class="col-md-2 control-label">Fecha del presupuesto</label>
-								<div class="col-md-4">
-									<input type="text" maxlength="64" class="form-control dat " name="nombre" autocomplete="off" id="fecha">
-								</div>
-							</div>
-						
-							<div class="form-group">
-								<label for="nombre" class="col-md-2 control-label">Fecha de vencimiento</label>
-								<div class="col-md-4">
-									<input type="text" maxlength="64" class="form-control dat" name="nombre" autocomplete="off" id="fecha_final">
-								</div>
-							</div>
-			                </form>
-			                
-			                
-							<hr>
-							<form id="frm_guarda" class="form">
-							<table class="table table-hover table-light">
-        					    <thead>
-        					        <th>Detalles del artículo</th>
-        					        <th style="text-align: right" width="50">Cantidad</th>
-        					        <th style="text-align: right" width="140">Tarifa</th>
-        					        <th style="text-align: right" width="100">Descuento</th>
-        					        <th style="width: 115px;">Impuesto</th>
-        					        <th style="width: 150px; text-align: right">Importe</th>
-        					        <th style="width: 30px; text-align: right">&nbsp;</th>
-        					    </thead>
-        					    <tbody id="tabla_productos">
-        					        <tr class="row_1">
-        					            <td valign="top" style="vertical-align:top;">
-	        					            <textarea class="form-control autosizeme" name="producto[1]" id="producto" autocomplete="off" rows="1"></textarea>
-	        					        </td>
-        					            <td valign="top" style="vertical-align:top;">
-	        					            <input type="text" class="form-control cantidades numero cantidad" name="cantidad[1]" autocomplete="off" id="1"  maxlength="10" onkeyup="keyup_total_conceptos();"/>
-	        					        </td>
-        					            <td valign="top" style="vertical-align: top;">
-	        					            <input type="text" class="form-control cantidades numero tarifa_1" name="tarifa[1]" autocomplete="off" id="tarifa"  maxlength="10" onkeyup="keyup_total_conceptos();"/>
-	        					        </td>
-        					            <td align="right" valign="top" style="vertical-align: top;">
-											<div class="input-group">
-												<input type="text" class="form-control cantidades numero descuento_1" name="descuento[1]" id="descuento" autocomplete="off" maxlength="3" onkeyup="keyup_total_conceptos();">
-												<div class="input-group-addon">%</div>
-											</div>
-        					            </td>
-        					            <td valign="top" style="vertical-align: top;">
-	        					            <select class="bs-select form-control impuesto_1" data-width="95px" name="impuesto[1]" onchange="keyup_total_conceptos();">
-		        					            <option>&nbsp;</option>
-                                            	<option value="16">IVA 16%</option>
-                                            </select>
-                                        </td>
-        					            <td valign="top" style="vertical-align: top;">
-	        					            <input type="text" class="form-control cantidades numero importe_1" name="importe[1]" autocomplete="off" id="importe" readonly="1"/>
-	        					        </td>
-        					            <td align="right" valign="top" style="vertical-align: top;">
-	        					            <a role="button" class="btn btn-danger btn-xs" onclick="remover()" style="margin-top: 6px;"><i class="fa fa-remove"></i></a>
-        					            </td>
-        					        </tr>
-        					    </tbody>
-        					</table>
-        					
-        					<hr>
-        					<div class="row">
-        						<div class="col-md-6">
-	        						<a role="button" class="btn blue-chambray btn-outline" onclick="agregaProducto()">Agregar otra línea</a>
-	        						<div class="well" style="margin-top: 20px;">
-		        						
-		        						<div class="form-group">
-											<label for="exampleInputEmail1">Notas para el cliente</label>
-											<textarea class="form-control control-ajuste autosizeme" name="producto" id="producto" autocomplete="off" rows="2"></textarea>
+<div class="page-content">
+	<div class="container">    
+		<div class="page-content-inner">
+			<div class="row">
+				<div class="col-md-12">
+			        <!-- BEGIN BORDERED TABLE PORTLET-->
+			        <div class="portlet light portlet-fit ">
+			            <div class="portlet-title">
+			                <div class="caption">
+			                    <i class="icon-doc font-dark"></i>
+			                    <span class="caption-subject font-dark sbold uppercase">Presupuesto (Cotización)</span>
+			                </div>
+			                <div class="actions">
+				                
+			                    <!--<a href="#" class="btn btn-sm blue-chambray "><i class="fa fa-plus"></i> Cancelar </a>-->
+			                    
+			                </div>
+			            </div>
+			            <div class="portlet-body">
+								<div class="alert alert-danger oculto" role="alert" id="msg_error"></div>
+								<div class="form-body">
+					                
+					                <form id="frm-datos" class="form-horizontal">
+						            
+						            <div class="form-group">
+										<label for="id_cliente" class="col-md-2 control-label">Empresa emisora</label>
+										<div class="col-md-6">
+											<select class="form-control select2" name="id_empresa" id="id_empresa" >
+												<option value="0" >Seleccione</option>
+												<? foreach($empresas as $empresa): ?>
+												<option value="<?=$empresa->id_empresa?>"><?=$empresa->empresa?></option>
+												<? endforeach; ?>
+											</select>
 										</div>
-										
-										<div class="form-group">
-											<label for="exampleInputEmail1">Términos y condiciones</label>
-											<textarea class="form-control control-ajuste autosizeme" name="producto" id="producto" autocomplete="off" rows="2"></textarea>
+									</div>
+									<hr>
+									<div class="form-group">
+										<label for="id_cliente" class="col-md-2 control-label">Seleccione el cliente</label>
+										<div class="col-md-6">
+											<select class="form-control select2" name="id_cliente" id="id_cliente" >
+												<option value="0" >Seleccione</option>
+												<? foreach($clientes as $cliente): ?>
+												<option value="<?=$cliente->id_cliente?>"><?=$cliente->cliente?></option>
+												<? endforeach; ?>
+												<option value="NUEVO">NUEVO CLIENTE</option>
+											</select>
 										</div>
-										
-	        						</div>
-        						</div>
-        						<div class="col-md-6">
-	        						<div class="well">
-		        						<hr style="border-top: 1.5px dashed #333;margin-top: 0px;">
-                                        <div class="row static-info align-reverse">
-                                            <div class="col-md-8 name"> Sub Total: </div>
-                                            <div class="col-md-3 value" id="muestra_subtotal"> 0.00 </div>
-                                        </div>
-                                        <div class="row static-info align-reverse">
-                                            <div class="col-md-8 name"> IVA: </div>
-                                            <div class="col-md-3 value" id="muestra_impuesto"> 0.00 </div>
-                                        </div>
-                                        <div class="row static-info align-reverse">
-                                            <div class="col-md-8 name"> 
-	                                            <input type="text" class="form-control cantidades pull-right control-ajuste" name="ajuste_texto" autocomplete="off" id="ajuste_texto" value="Ajuste" style="width: 100px;" maxlength="18"/> </div>
-                                            <div class="col-md-3 value" style="padding-right: 2px;"> 
-	                                            <i class="fa fa-info-circle popovers" style="margin: 10px 8px 0px 0px" data-container="body" data-trigger="hover" data-placement="top" data-content="Añada cualquier cargo positivo o negativo que se deba aplicar para ajustar el importe total de la factura, por ejemplo, +10 o -10." ></i>
-	                                            <input type="text" class="form-control cantidades numero pull-right control-ajuste" name="ajuste" autocomplete="off" id="ajuste" maxlength="10" style="width: 80px;" value="0.00" onkeyup="keyup_total_conceptos()"/> 
-	                                        </div>
-                                        </div>
-                                        <div class="row static-info align-reverse">
-                                            <div class="col-md-8 name"> Total ( MXN ): </div>
-                                            <div class="col-md-3 value" id="muestra_total"> 0.00 </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-	                                    <div class="col-md-12" style="text-align: right;margin-top: 28px;">
-											<a role="button" class="btn btn-default btn-outline ">Guardar como borrador</a>&nbsp;&nbsp;
-
-											<a role="button" class="btn red-thunderbird btn-outline ">Guardar y enviar</a>&nbsp;&nbsp;
-
-											<a role="button" class="btn btn-default btn-outline ">Cancelar</a>
+									</div>
+									
+									<hr>
+		
+									<div class="form-group">
+										<label for="nombre" class="col-md-2 control-label">Referencia</label>
+										<div class="col-md-4">
+											<input type="text" maxlength="64" class="form-control dat" name="referencia" autocomplete="off">
 										</div>
-        						</div>
-        					</div>
-
-        					</form>
-        					
-						</div>
-        					
-						</div>
-	            </div>
-	            
-	        </div>
-	        <!-- END BORDERED TABLE PORTLET-->
-	    </div>
+									</div>
+									
+									<div class="form-group">
+										<label for="nombre" class="col-md-2 control-label">Fecha del presupuesto</label>
+										<div class="col-md-4">
+											<input type="text" maxlength="64" class="form-control dat " name="fecha" autocomplete="off" id="fecha">
+										</div>
+									</div>
+								
+									<div class="form-group">
+										<label for="nombre" class="col-md-2 control-label">Fecha de vencimiento</label>
+										<div class="col-md-4">
+											<input type="text" maxlength="64" class="form-control dat" name="fecha_expira" autocomplete="off" id="fecha_expira">
+										</div>
+									</div>
+					                </form>
+					                
+					                
+									<hr>
+									<form id="frm-productos" class="form">
+									<table class="table table-hover table-light">
+		        					    <thead>
+		        					        <th>Detalles del artículo</th>
+		        					        <th style="text-align: right" width="50">Cantidad</th>
+		        					        <th style="text-align: right" width="140">Tarifa</th>
+		        					        <th style="text-align: right" width="100">Descuento</th>
+		        					        <th style="width: 115px;">Impuesto</th>
+		        					        <th style="width: 150px; text-align: right">Importe</th>
+		        					        <th style="width: 30px; text-align: right">&nbsp;</th>
+		        					    </thead>
+		        					    <tbody id="tabla_productos">
+		        					        <tr class="row_1">
+		        					            <td valign="top" style="vertical-align:top;">
+			        					            <textarea class="form-control autosizeme" name="producto[1]" id="producto" autocomplete="off" rows="1"></textarea>
+			        					        </td>
+		        					            <td valign="top" style="vertical-align:top;">
+			        					            <input type="text" class="form-control cantidades numero cantidad" name="cantidad[1]" autocomplete="off" id="1"  maxlength="10" onkeyup="keyup_total_conceptos();"/>
+			        					        </td>
+		        					            <td valign="top" style="vertical-align: top;">
+			        					            <input type="text" class="form-control cantidades numero tarifa_1" name="tarifa[1]" autocomplete="off" id="tarifa"  maxlength="10" onkeyup="keyup_total_conceptos();"/>
+			        					        </td>
+		        					            <td align="right" valign="top" style="vertical-align: top;">
+													<div class="input-group">
+														<input type="text" class="form-control cantidades numero descuento_1" name="descuento[1]" id="descuento" autocomplete="off" maxlength="3" onkeyup="keyup_total_conceptos();">
+														<div class="input-group-addon">%</div>
+													</div>
+		        					            </td>
+		        					            <td valign="top" style="vertical-align: top;">
+			        					            <select class="bs-select form-control impuesto_1" data-width="95px" name="impuesto[1]" onchange="keyup_total_conceptos();">
+				        					            <option>&nbsp;</option>
+		                                            	<option value="16">IVA 16%</option>
+		                                            </select>
+		                                        </td>
+		        					            <td valign="top" style="vertical-align: top;">
+			        					            <input type="text" class="form-control cantidades numero importe_1" name="importe[1]" autocomplete="off" id="importe" readonly="1"/>
+			        					        </td>
+		        					            <td align="right" valign="top" style="vertical-align: top;">
+			        					            <a role="button" class="btn btn-danger btn-xs" onclick="remover()" style="margin-top: 6px;"><i class="fa fa-remove"></i></a>
+		        					            </td>
+		        					        </tr>
+		        					    </tbody>
+		        					</table>
+		        					
+		        					<hr>
+		        					<div class="row">
+		        						<div class="col-md-6">
+			        						<a role="button" class="btn blue-chambray btn-outline" onclick="agregaProducto()">Agregar otra línea</a>
+			        						<div class="well" style="margin-top: 20px;">
+				        						
+				        						<div class="form-group">
+													<label for="exampleInputEmail1">Notas para el cliente</label>
+													<textarea class="form-control control-ajuste autosizeme" name="notas" id="notas" autocomplete="off" rows="2"></textarea>
+												</div>
+												
+												<div class="form-group">
+													<label for="exampleInputEmail1">Términos y condiciones</label>
+													<textarea class="form-control control-ajuste autosizeme" name="terminos" id="terminos" autocomplete="off" rows="2"></textarea>
+												</div>
+												
+			        						</div>
+		        						</div>
+		        						<div class="col-md-6">
+			        						<div class="well">
+				        						<hr style="border-top: 1.5px dashed #333;margin-top: 0px;">
+		                                        <div class="row static-info align-reverse">
+		                                            <div class="col-md-8 name"> Sub Total: </div>
+		                                            <div class="col-md-3 value" id="muestra_subtotal"> 0.00 </div>
+		                                        </div>
+		                                        <div class="row static-info align-reverse">
+		                                            <div class="col-md-8 name"> IVA: </div>
+		                                            <div class="col-md-3 value" id="muestra_impuesto"> 0.00 </div>
+		                                        </div>
+		                                        <div class="row static-info align-reverse">
+		                                            <div class="col-md-8 name"> 
+			                                            <input type="text" class="form-control cantidades pull-right control-ajuste" name="ajuste_texto" autocomplete="off" id="ajuste_texto" value="Ajuste" style="width: 100px;" maxlength="18"/> </div>
+		                                            <div class="col-md-3 value" style="padding-right: 2px;"> 
+			                                            <i class="fa fa-info-circle popovers" style="margin: 10px 8px 0px 0px" data-container="body" data-trigger="hover" data-placement="top" data-content="Añada cualquier cargo positivo o negativo que se deba aplicar para ajustar el importe total de la factura, por ejemplo, +10 o -10." ></i>
+			                                            <input type="text" class="form-control cantidades numero pull-right control-ajuste" name="ajuste_monto" autocomplete="off" id="ajuste" maxlength="10" style="width: 80px;" value="0.00" onkeyup="keyup_total_conceptos()"/> 
+			                                        </div>
+		                                        </div>
+		                                        <div class="row static-info align-reverse">
+		                                            <div class="col-md-8 name"> Total ( MXN ): </div>
+		                                            <div class="col-md-3 value" id="muestra_total"> 0.00 </div>
+		                                        </div>
+		                                    </div>
+		                                    <div class="row">
+			                                    <div class="col-md-12" style="text-align: right;margin-top: 28px;">
+													<a role="button" class="btn btn-default btn-outline " onclick="guardaPresupuesto(borrador)">Guardar como borrador</a>&nbsp;&nbsp;
+		
+													<a role="button" class="btn red-thunderbird btn-outline " onclick="guardaPresupuesto()">Guardar y enviar</a>&nbsp;&nbsp;
+		
+													<a role="button" class="btn btn-default btn-outline " href="?Modulo=Presupuestos">Cancelar</a>
+												</div>
+		        						</div>
+		        					</div>
+		
+		        					</form>
+		        					
+								</div>
+		        					
+								</div>
+			            </div>
+			            
+			        </div>
+			        <!-- END BORDERED TABLE PORTLET-->
+			    </div>
+			</div>
+		</div>
 	</div>
-
 </div>
+
 <script>
 function total_conceptos(){
 	
@@ -248,7 +250,7 @@ function total_conceptos(){
 		macizo=totales+ivas;
 		
 		if(ajuste){
-			macizo = (macizo)(ajuste);
+			macizo = macizo+ajuste;
 		}
 		
 	});
@@ -294,6 +296,35 @@ function agregaProducto(){
 		
 }
 
+function guardaPresupuesto(){
+	
+	App.blockUI({
+		boxed: true,
+		message: 'Creando presupuesto.'
+	});
+
+	$('#msg_error').hide('Fast');
+	
+	var datos=$('#frm-datos').serialize()+"&"+$('#frm-productos').serialize();
+	
+	$.post('ac/nuevo_presupuesto.php',datos,function(data){
+		var datos = data.split('|');
+	   	var valida=datos[0];
+	   	var referencia=datos[1];
+	    if(valida==1){
+		    alert("Presupuesto "+referencia);
+			//window.open("?Modulo=Presupuestos&msg=1", "_self");
+			App.unblockUI();
+	    }else{
+			$('#msg_error').html(referencia);
+			$('#msg_error').show('Fast');
+			App.unblockUI();
+	    }
+	});
+
+	//App.unblockUI('#blockui_sample_1_portlet_body');
+}
+
 $(function(){
 	
 	$('#fecha').datepicker({
@@ -302,7 +333,7 @@ $(function(){
 	    todayHighlight: true,
 	    language: 'es'
 	});
-	$('#fecha_final').datepicker({
+	$('#fecha_expira').datepicker({
 	    format: 'dd/mm/yyyy',
 	    autoclose: true,
 	    language: 'es'

@@ -30,80 +30,82 @@ endwhile;
 	cursor: pointer;
 }
 </style>
-
-<div class="page-content-inner">
-	<div class="row">
-		<div class="col-md-12">
-			<!-- Confirmación -->
-			  <? if($_GET['msg']==1){ ?>
-			  		<br>
-			  		<div class="alert alert-dismissable alert-success">
-				  		<button type="button" class="close" data-dismiss="alert">×</button>
-				  		<p>El cliente se ha agregado</p>
-				  	</div>
-			  <? }if($_GET['msg']==2){ ?>
-			  		<br>
-			  		<div class="alert alert-dismissable alert-info">
-				  		<button type="button" class="close" data-dismiss="alert">×</button>
-				  		<p>El cliente se ha editado</p>
-				  	</div>
-			  <? } ?>
-			  <!-- Contenido -->
-			<!-- BEGIN EXAMPLE TABLE PORTLET-->
-			<div class="portlet light  portlet-fit">
-				<div class="portlet-title">
-					<div class="caption">
-						<i class="icon-briefcase font-dark"></i>
-						<span class="caption-subject font-dark bold uppercase">Clientes</span>
+<div class="page-content">
+	<div class="container">    
+		<div class="page-content-inner">
+			<div class="row">
+				<div class="col-md-12">
+					<!-- Confirmación -->
+					  <? if($_GET['msg']==1){ ?>
+					  		<br>
+					  		<div class="alert alert-dismissable alert-success">
+						  		<button type="button" class="close" data-dismiss="alert">×</button>
+						  		<p>El cliente se ha agregado</p>
+						  	</div>
+					  <? }if($_GET['msg']==2){ ?>
+					  		<br>
+					  		<div class="alert alert-dismissable alert-info">
+						  		<button type="button" class="close" data-dismiss="alert">×</button>
+						  		<p>El cliente se ha editado</p>
+						  	</div>
+					  <? } ?>
+					  <!-- Contenido -->
+					<!-- BEGIN EXAMPLE TABLE PORTLET-->
+					<div class="portlet light  portlet-fit">
+						<div class="portlet-title">
+							<div class="caption">
+								<i class="icon-briefcase font-dark"></i>
+								<span class="caption-subject font-dark bold uppercase">Clientes</span>
+							</div>
+							<div class="actions btn-set">
+								<a href="javascript:;" class="btn btn-sm blue-chambray " data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#nuevoCliente"><i class="fa fa-plus"></i> Agregar cliente </a>
+							</div>
+						</div>
+						<div class="portlet-body">
+							<? if($val>0): ?>
+							<table class="table table-striped table-bordered table-hover">
+								<thead>
+							        <tr>
+							          <th>Cliente</th>
+							          <th>Representante</th>
+							          <th>Empresa</th>
+							          <th>Teléfono</th>
+							          <th>Email</th>
+							          <th width="150"></th>
+							        </tr>
+							      </thead>
+							      <tbody>
+								    <? foreach($clientes as $cliente): ?>  
+							        <tr>
+										<td><?=$cliente->cliente?></td>
+										<td><?=$cliente->representante?></td>
+										<td><? if($cliente->id_empresa==0): echo "TODAS"; else: echo $cliente->empresa; endif;?></td>
+										<td><?=$cliente->telefono?></td>
+										<td><?=$cliente->email?></td>
+										<td align="right">
+											<a role="button" class="btn blue btn-xs btn_<?=$cliente->id_cliente?>" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#editaCliente" data-id="<?=$cliente->id_cliente?>">Editar</a>
+											<a role="button" class="btn red btn-xs btn_<?=$cliente->id_cliente?>" onclick="javascript:Desactiva(<?=$cliente->id_cliente?>)">Desactivar</a>
+											<!--<a role="button" class="btn  default btn-xs btn_<?=$cliente->id_cliente?>" onclick="javascript:s(<?=$cliente->id_cliente?>)">Historial</a>-->
+										</td>
+							        </tr>
+							        <? endforeach; ?>
+							        
+							      </tbody>
+							</table>
+							<? else: ?>
+							<div class="alert alert-dismissable alert-warning">
+						  		<button type="button" class="close" data-dismiss="alert">×</button>
+						  		<p>Aún no se han creado clientes</p>
+						  	</div>
+							<? endif; ?>
+						</div>
 					</div>
-					<div class="actions btn-set">
-						<a href="javascript:;" class="btn btn-sm blue-chambray " data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#nuevoCliente"><i class="fa fa-plus"></i> Agregar cliente </a>
-					</div>
-				</div>
-				<div class="portlet-body">
-					<? if($val>0): ?>
-					<table class="table table-striped table-bordered table-hover">
-						<thead>
-					        <tr>
-					          <th>Cliente</th>
-					          <th>Representante</th>
-					          <th>Empresa</th>
-					          <th>Teléfono</th>
-					          <th>Email</th>
-					          <th width="150"></th>
-					        </tr>
-					      </thead>
-					      <tbody>
-						    <? foreach($clientes as $cliente): ?>  
-					        <tr>
-								<td><?=$cliente->cliente?></td>
-								<td><?=$cliente->representante?></td>
-								<td><? if($cliente->id_empresa==0): echo "TODAS"; else: echo $cliente->empresa; endif;?></td>
-								<td><?=$cliente->telefono?></td>
-								<td><?=$cliente->email?></td>
-								<td align="right">
-									<a role="button" class="btn blue btn-xs btn_<?=$cliente->id_cliente?>" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#editaCliente" data-id="<?=$cliente->id_cliente?>">Editar</a>
-									<a role="button" class="btn red btn-xs btn_<?=$cliente->id_cliente?>" onclick="javascript:Desactiva(<?=$cliente->id_cliente?>)">Desactivar</a>
-									<!--<a role="button" class="btn  default btn-xs btn_<?=$cliente->id_cliente?>" onclick="javascript:s(<?=$cliente->id_cliente?>)">Historial</a>-->
-								</td>
-					        </tr>
-					        <? endforeach; ?>
-					        
-					      </tbody>
-					</table>
-					<? else: ?>
-					<div class="alert alert-dismissable alert-warning">
-				  		<button type="button" class="close" data-dismiss="alert">×</button>
-				  		<p>Aún no se han creado clientes</p>
-				  	</div>
-					<? endif; ?>
+					<!-- END EXAMPLE TABLE PORTLET-->
 				</div>
 			</div>
-			<!-- END EXAMPLE TABLE PORTLET-->
 		</div>
 	</div>
 </div>
-
 
 
 

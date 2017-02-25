@@ -76,125 +76,127 @@ $cambio=0;
 	cursor: pointer;
 }
 </style>
-<!--<h3>Dentista Books</h3>-->
-<div class="page-content-inner">
-	<div class="row">
-		<div class="col-md-12">
-			<!-- Confirmación -->
-			<? if($_GET['msg']==1){ ?>
-			  	<br>
-			  	<div class="alert alert-dismissable alert-success">
-			    		<button type="button" class="close" data-dismiss="alert">×</button>
-			    		<p>La compra se ha agregado</p>
-			    	</div>
-			<? }if($_GET['msg']==2){ ?>
-			  	<br>
-			  	<div class="alert alert-dismissable alert-info">
-			    		<button type="button" class="close" data-dismiss="alert">×</button>
-			    		<p>La transferencia se ha efectuado</p>
-			    	</div>
-			<? }if($_GET['msg']==3){ ?>
-			  	<br>
-			  	<div class="alert alert-dismissable alert-success">
-			    		<button type="button" class="close" data-dismiss="alert">×</button>
-			    		<p>El ingreso se ha agregado</p>
-			    	</div>
-			<? } ?>
-			<!-- Contenido -->
-	        <!-- BEGIN BORDERED TABLE PORTLET-->
-	        <div class="portlet light portlet-fit ">
-	            <div class="portlet-title">
-	                <div class="caption">
-	                    <i class="icon-book-open font-dark"></i>
-	                    <span class="caption-subject font-dark sbold uppercase">Operaciones de cuentas </span>
-	                    <span class="caption-helper">(Ingresos - Egresos)</span>
-	                </div>
-	                <div class="actions">
-	                                        
-	                    <div class="btn-group">
-	                        <a class="btn blue-chambray dropdown-toggle" data-toggle="dropdown" href="javascript:;" aria-expanded="false"> Operaciones
-	                            <i class="fa fa-angle-down"></i>
-	                        </a>
-	                        <ul class="dropdown-menu">
-	                            <li>
-	                                <a href="javascript:;" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#nuevaCompra"> Nuevo Gasto </a>
-	                            </li>
-	                            <li>
-	                                <a href="javascript:;" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#nuevoIngreso"> Nuevo Ingreso </a>
-	                            </li>
-	                            <li>
-	                                <a href="javascript:;" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#nuevaTransferencia"> Nueva Transferencia </a>
-	                            </li>
-	                            
-	                        </ul>
-	                    </div>
-	                    
-	                    
-	                    
-	                </div>
-	            </div>
-	            <div class="portlet-body">
-	                <div class="table-scrollable table-scrollable-borderless">
-	                    <table class="table table-hover table-light">
-	                        <thead>
-	                            <tr class="uppercase">
-	                                <th> Empresa </th>
-	                                <th> Cuenta </th>
-	                                <!--<th width="120" style="text-align: right"> Ingresos </th>
-	                                <th width="120" style="text-align: right"> Egresos </th>-->
-	                                <th width="120" style="text-align: right"> Saldo </th>
-	                                <th width="150"> </th>
-	                            </tr>
-	                        </thead>
-	                        <tbody>
-		                        
-		                        <? foreach($cuentas as $cuenta): 
-			                        $id_cuenta=$cuenta->id_cuenta;
-			                        
-			                        $ingresos=dameIngresos($id_cuenta);
-			                        $egresos=dameEgresoso($id_cuenta);
-			                        
-			                        $saldo=$ingresos-$egresos;
-			                        
-			                        if($cambio!=$cuenta->id_empresa):
-			                        	echo "<tr>
-												<td> &nbsp; </td>
-												<td> &nbsp; </td>
-												<td> &nbsp; </td>
-
-												<td> &nbsp; </td>
-											</tr>";
-			                        endif;
-			                        
-		                        ?>
-	                            <tr>
-	                                <td> <?=$cuenta->clinica ?> </td>
-	                                <td> <?=$cuenta->alias ?> (<?=dameTipo($cuenta->tipo_cuenta) ?>) </td>
-	                                <!--<td align="right" class="font-dark"> <?=number_format($ingresos,2)?> </td>
-	                                <td align="right" class="font-dark"> <?=number_format($egresos,2)?> </td>-->
-	                                <td align="right" class="font-dark"> <?=number_format($saldo,2)?> </td>
-	                                <td align="right">
-	                                    <a href="?Modulo=Transacciones&id=<?= $id_cuenta ?>" role="button" class="btn  blue-chambray btn-xs ">Transacciones</a>
-	                                </td>
-	                            </tr>
-	                            
-	                            
-	                            <? 
-		                            
-			                        
-		                            $cambio=$cuenta->id_empresa;
-		                            endforeach; ?>
-	                            
-	                        </tbody>
-	                    </table>
-	                </div>
-	            </div>
-	        </div>
-	        <!-- END BORDERED TABLE PORTLET-->
-	    </div>
+<div class="page-content">
+	<div class="container">    
+		<div class="page-content-inner">
+			<div class="row">
+				<div class="col-md-12">
+					<!-- Confirmación -->
+					<? if($_GET['msg']==1){ ?>
+					  	<br>
+					  	<div class="alert alert-dismissable alert-success">
+					    		<button type="button" class="close" data-dismiss="alert">×</button>
+					    		<p>La compra se ha agregado</p>
+					    	</div>
+					<? }if($_GET['msg']==2){ ?>
+					  	<br>
+					  	<div class="alert alert-dismissable alert-info">
+					    		<button type="button" class="close" data-dismiss="alert">×</button>
+					    		<p>La transferencia se ha efectuado</p>
+					    	</div>
+					<? }if($_GET['msg']==3){ ?>
+					  	<br>
+					  	<div class="alert alert-dismissable alert-success">
+					    		<button type="button" class="close" data-dismiss="alert">×</button>
+					    		<p>El ingreso se ha agregado</p>
+					    	</div>
+					<? } ?>
+					<!-- Contenido -->
+			        <!-- BEGIN BORDERED TABLE PORTLET-->
+			        <div class="portlet light portlet-fit ">
+			            <div class="portlet-title">
+			                <div class="caption">
+			                    <i class="icon-book-open font-dark"></i>
+			                    <span class="caption-subject font-dark sbold uppercase">Operaciones de cuentas </span>
+			                    <span class="caption-helper">(Ingresos - Egresos)</span>
+			                </div>
+			                <div class="actions">
+			                                        
+			                    <div class="btn-group">
+			                        <a class="btn blue-chambray dropdown-toggle" data-toggle="dropdown" href="javascript:;" aria-expanded="false"> Operaciones
+			                            <i class="fa fa-angle-down"></i>
+			                        </a>
+			                        <ul class="dropdown-menu">
+			                            <li>
+			                                <a href="javascript:;" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#nuevaCompra"> Nuevo Gasto </a>
+			                            </li>
+			                            <li>
+			                                <a href="javascript:;" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#nuevoIngreso"> Nuevo Ingreso </a>
+			                            </li>
+			                            <li>
+			                                <a href="javascript:;" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#nuevaTransferencia"> Nueva Transferencia </a>
+			                            </li>
+			                            
+			                        </ul>
+			                    </div>
+			                    
+			                    
+			                    
+			                </div>
+			            </div>
+			            <div class="portlet-body">
+			                <div class="table-scrollable table-scrollable-borderless">
+			                    <table class="table table-hover table-light">
+			                        <thead>
+			                            <tr class="uppercase">
+			                                <th> Empresa </th>
+			                                <th> Cuenta </th>
+			                                <!--<th width="120" style="text-align: right"> Ingresos </th>
+			                                <th width="120" style="text-align: right"> Egresos </th>-->
+			                                <th width="120" style="text-align: right"> Saldo </th>
+			                                <th width="150"> </th>
+			                            </tr>
+			                        </thead>
+			                        <tbody>
+				                        
+				                        <? foreach($cuentas as $cuenta): 
+					                        $id_cuenta=$cuenta->id_cuenta;
+					                        
+					                        $ingresos=dameIngresos($id_cuenta);
+					                        $egresos=dameEgresoso($id_cuenta);
+					                        
+					                        $saldo=$ingresos-$egresos;
+					                        
+					                        if($cambio!=$cuenta->id_empresa):
+					                        	echo "<tr>
+														<td> &nbsp; </td>
+														<td> &nbsp; </td>
+														<td> &nbsp; </td>
+		
+														<td> &nbsp; </td>
+													</tr>";
+					                        endif;
+					                        
+				                        ?>
+			                            <tr>
+			                                <td> <?=$cuenta->clinica ?> </td>
+			                                <td> <?=$cuenta->alias ?> (<?=dameTipo($cuenta->tipo_cuenta) ?>) </td>
+			                                <!--<td align="right" class="font-dark"> <?=number_format($ingresos,2)?> </td>
+			                                <td align="right" class="font-dark"> <?=number_format($egresos,2)?> </td>-->
+			                                <td align="right" class="font-dark"> <?=number_format($saldo,2)?> </td>
+			                                <td align="right">
+			                                    <a href="?Modulo=Transacciones&id=<?= $id_cuenta ?>" role="button" class="btn  blue-chambray btn-xs ">Transacciones</a>
+			                                </td>
+			                            </tr>
+			                            
+			                            
+			                            <? 
+				                            
+					                        
+				                            $cambio=$cuenta->id_empresa;
+				                            endforeach; ?>
+			                            
+			                        </tbody>
+			                    </table>
+			                </div>
+			            </div>
+			        </div>
+			        <!-- END BORDERED TABLE PORTLET-->
+			    </div>
+			</div>
+		</div>
 	</div>
 </div>
-
 
 
 

@@ -91,7 +91,7 @@ function fechaBase($fecha){
 	return $anio."-".$mes."-".$dia;
 }
 function fechaBase2($fecha){ 
-	list($mes,$dia,$anio)=explode("/",$fecha); 
+	list($dia,$mes,$anio)=explode("/",$fecha); 
 
 	$dia=(string)(int)$dia;
 	return $anio."-".$mes."-".$dia;

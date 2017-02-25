@@ -149,128 +149,130 @@ $egresos=dameEgresoso($id_cuenta_get);
 			                        
 $saldo=$ingresos-$egresos;
 ?>
-
-<div class="page-content-inner">
-	<div class="row">
-		<div class="col-md-12">
-	        <!-- BEGIN BORDERED TABLE PORTLET-->
-	        <div class="portlet light portlet-fit ">
-	            <div class="portlet-title">
-	                <div class="caption">
-	                    <i class="icon-book-open font-dark"></i>
-	                    <span class="caption-subject font-dark sbold uppercase">Transacciones de <?=$ft['empresa'] ?> (<?=$ft['alias'] ?>/<?=dameTipo($ft['tipo_cuenta']) ?>)</span>
-	                    <div class="caption-desc font-grey-cascade"> <?=$subtitulo?> - Saldo al día: <?=number_format($saldo,2)?> </div>
-	                </div>
-	                <div class="actions">
-		                <? if($fecha1): ?>
-		                <a href="?Modulo=Transacciones&id=<?=$id_cuenta_get?>" class="btn btn-sm red-thunderbird "> Últimos 30 movimientos </a>&nbsp;&nbsp;
-		                <? endif; ?>
-	                    <a href="javascript:;" class="btn btn-sm blue-chambray " data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#filtro_fechas"> Filtro por fechas </a>&nbsp;&nbsp;
-	                    <div class="btn-group ">
-	                        <a class="btn blue-chambray dropdown-toggle" data-toggle="dropdown" href="javascript:;" aria-expanded="false"> Tipo
-	                            <i class="fa fa-angle-down"></i>
-	                        </a>
-	                        <ul class="dropdown-menu">
-	                            <li>
-	                                <a href="?Modulo=Transacciones&id=<?=$id_cuenta_get?>&tipo=2&fecha1=<?=$fecha1?>&fecha2=<?=$fecha2?>"> Ingresos </a>
-	                            </li>
-	                            <li>
-	                                <a href="?Modulo=Transacciones&id=<?=$id_cuenta_get?>&tipo=1&fecha1=<?=$fecha1?>&fecha2=<?=$fecha2?>"> Gastos </a>
-	                            </li>
-	                            <li>
-	                                <a href="?Modulo=Transacciones&id=<?=$id_cuenta_get?>&fecha1=<?=$fecha1?>&fecha2=<?=$fecha2?>"> Todos </a>
-	                            </li>
-	                            
-	                        </ul>
-	                    </div>
-	                    
-	                </div>
-	            </div>
-	            <div class="portlet-body">
-		            
-		            <? if($valida): ?>
-	                <div class="table-scrollable table-scrollable-borderless">
-	                    <table class="table table-hover table-light">
-	                        <thead>
-	                            <tr class="uppercase">
-	                                <th width="40"> # </th>
-	                                <th width="100"> Fecha </th>
-	                                <th> Concepto </th>
-	                                <th width="150" style="text-align: right"> Ingresos </th>
-	                                <th width="150" style="text-align: right"> Gastos </th>
-	                                <th width="100">  </th>
-	                            </tr>
-	                        </thead>
-	                        <tbody>
-		                        <? 
-			                        foreach ($operaciones as $key => $value) {
-										$fechas[$key]=$operaciones[$key][4];
-									}
-									array_multisort($fechas, SORT_DESC, $operaciones);
-									
-			                        foreach ($operaciones as $val => $value):
-										$total_ingresos+=$operaciones[$val][5];
-										$total_egresos+=$operaciones[$val][6];
-										
-										if($operaciones[$val][9]==2){
-											//Salida
-											$fecha="<i class='fa fa-arrow-left'></i>";
-											$saldo-=$operaciones[$val][6];
-										}else{
-											//Entrada
-											$fecha="<i class='fa fa-arrow-right'></i>";
-											$saldo+=$operaciones[$val][5];
-										} 
-										
-										$total_cuenta=$total_ingresos-$total_egresos;
-								?>
-	                            <tr>
-	                                <td> <?=$cuenta?> </td>
-	                                <td class="font-dark"> <?=fechaLetra(fechaSinHora($operaciones[$val][4]))?> </td>
-	                                <td class="font-dark"> <?=$operaciones[$val][3]?> <? if($operaciones[$val][10]): echo "<br><small><em>".$fecha." ".datosCuenta($operaciones[$val][10])."</em></small>"; endif;?></td>
-	                                <td align="right" class="font-dark"> <? if($operaciones[$val][5]): echo number_format($operaciones[$val][5],2); endif;?> </td>
-	                                <td align="right" class="font-dark"> <? if($operaciones[$val][6]): echo number_format($operaciones[$val][6],2); endif;?> </td>
-	                                <td align="right" class="font-dark"> 
-		                                <a href="javascript:;" class="btn red btn-outline btn-xs" role="button" onclick="javascript:eliminaOperacion(<?=$operaciones[$val][0]?>,<?=$operaciones[$val][9]?>,<?=$operaciones[$val][11]?>)">Eliminar</a> 
-		                            </td>
-	                            </tr>
-	                            <? 
-		                            $cuenta++;
-		                            endforeach; ?>
-	                            <!--
-	                            <tr>
-	                                <td> &nbsp;  </td>
-	                                <td class="font-dark"> &nbsp; </td>
-	                                <td class="font-dark"> &nbsp; </td>
-	                                <td align="right" class="font-dark"> &nbsp; </td>
-	                                <td align="right" class="font-dark"> &nbsp; </td>
-	                                <td align="right" class="font-dark"> &nbsp; </td>
-	                            </tr>-->
-	                            <? if(!$tipo_web): ?>
-	                            <tr>
-	                                <td>  </td>
-	                                <td class="font-dark">  </td>
-	                                <td class="font-dark">  </td>
-	                                <td align="right" class="font-dark"> <?=number_format($total_ingresos,2)?> </td>
-	                                <td align="right" class="font-dark"> <?=number_format($total_egresos,2)?> </td>
-	                                <td align="right" class="font-dark">  </td>
-	                            </tr>
-	                            <? endif; ?>
-	                        </tbody>
-	                    </table>
-	                </div>
-	                <? else: ?>
-	                <div class="alert alert-dismissable alert-success">
-						<p><?=$msg_val?></p>
-					</div>
-	                <? endif; ?>
-	            </div>
-	        </div>
-	        <!-- END BORDERED TABLE PORTLET-->
-	    </div>
+<div class="page-content">
+	<div class="container">    
+		<div class="page-content-inner">
+			<div class="row">
+				<div class="col-md-12">
+			        <!-- BEGIN BORDERED TABLE PORTLET-->
+			        <div class="portlet light portlet-fit ">
+			            <div class="portlet-title">
+			                <div class="caption">
+			                    <i class="icon-book-open font-dark"></i>
+			                    <span class="caption-subject font-dark sbold uppercase">Transacciones de <?=$ft['empresa'] ?> (<?=$ft['alias'] ?>/<?=dameTipo($ft['tipo_cuenta']) ?>)</span>
+			                    <div class="caption-desc font-grey-cascade"> <?=$subtitulo?> - Saldo al día: <?=number_format($saldo,2)?> </div>
+			                </div>
+			                <div class="actions">
+				                <? if($fecha1): ?>
+				                <a href="?Modulo=Transacciones&id=<?=$id_cuenta_get?>" class="btn btn-sm red-thunderbird "> Últimos 30 movimientos </a>&nbsp;&nbsp;
+				                <? endif; ?>
+			                    <a href="javascript:;" class="btn btn-sm blue-chambray " data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#filtro_fechas"> Filtro por fechas </a>&nbsp;&nbsp;
+			                    <div class="btn-group ">
+			                        <a class="btn blue-chambray dropdown-toggle" data-toggle="dropdown" href="javascript:;" aria-expanded="false"> Tipo
+			                            <i class="fa fa-angle-down"></i>
+			                        </a>
+			                        <ul class="dropdown-menu">
+			                            <li>
+			                                <a href="?Modulo=Transacciones&id=<?=$id_cuenta_get?>&tipo=2&fecha1=<?=$fecha1?>&fecha2=<?=$fecha2?>"> Ingresos </a>
+			                            </li>
+			                            <li>
+			                                <a href="?Modulo=Transacciones&id=<?=$id_cuenta_get?>&tipo=1&fecha1=<?=$fecha1?>&fecha2=<?=$fecha2?>"> Gastos </a>
+			                            </li>
+			                            <li>
+			                                <a href="?Modulo=Transacciones&id=<?=$id_cuenta_get?>&fecha1=<?=$fecha1?>&fecha2=<?=$fecha2?>"> Todos </a>
+			                            </li>
+			                            
+			                        </ul>
+			                    </div>
+			                    
+			                </div>
+			            </div>
+			            <div class="portlet-body">
+				            
+				            <? if($valida): ?>
+			                <div class="table-scrollable table-scrollable-borderless">
+			                    <table class="table table-hover table-light">
+			                        <thead>
+			                            <tr class="uppercase">
+			                                <th width="40"> # </th>
+			                                <th width="100"> Fecha </th>
+			                                <th> Concepto </th>
+			                                <th width="150" style="text-align: right"> Ingresos </th>
+			                                <th width="150" style="text-align: right"> Gastos </th>
+			                                <th width="100">  </th>
+			                            </tr>
+			                        </thead>
+			                        <tbody>
+				                        <? 
+					                        foreach ($operaciones as $key => $value) {
+												$fechas[$key]=$operaciones[$key][4];
+											}
+											array_multisort($fechas, SORT_DESC, $operaciones);
+											
+					                        foreach ($operaciones as $val => $value):
+												$total_ingresos+=$operaciones[$val][5];
+												$total_egresos+=$operaciones[$val][6];
+												
+												if($operaciones[$val][9]==2){
+													//Salida
+													$fecha="<i class='fa fa-arrow-left'></i>";
+													$saldo-=$operaciones[$val][6];
+												}else{
+													//Entrada
+													$fecha="<i class='fa fa-arrow-right'></i>";
+													$saldo+=$operaciones[$val][5];
+												} 
+												
+												$total_cuenta=$total_ingresos-$total_egresos;
+										?>
+			                            <tr>
+			                                <td> <?=$cuenta?> </td>
+			                                <td class="font-dark"> <?=fechaLetra(fechaSinHora($operaciones[$val][4]))?> </td>
+			                                <td class="font-dark"> <?=$operaciones[$val][3]?> <? if($operaciones[$val][10]): echo "<br><small><em>".$fecha." ".datosCuenta($operaciones[$val][10])."</em></small>"; endif;?></td>
+			                                <td align="right" class="font-dark"> <? if($operaciones[$val][5]): echo number_format($operaciones[$val][5],2); endif;?> </td>
+			                                <td align="right" class="font-dark"> <? if($operaciones[$val][6]): echo number_format($operaciones[$val][6],2); endif;?> </td>
+			                                <td align="right" class="font-dark"> 
+				                                <a href="javascript:;" class="btn red btn-outline btn-xs" role="button" onclick="javascript:eliminaOperacion(<?=$operaciones[$val][0]?>,<?=$operaciones[$val][9]?>,<?=$operaciones[$val][11]?>)">Eliminar</a> 
+				                            </td>
+			                            </tr>
+			                            <? 
+				                            $cuenta++;
+				                            endforeach; ?>
+			                            <!--
+			                            <tr>
+			                                <td> &nbsp;  </td>
+			                                <td class="font-dark"> &nbsp; </td>
+			                                <td class="font-dark"> &nbsp; </td>
+			                                <td align="right" class="font-dark"> &nbsp; </td>
+			                                <td align="right" class="font-dark"> &nbsp; </td>
+			                                <td align="right" class="font-dark"> &nbsp; </td>
+			                            </tr>-->
+			                            <? if(!$tipo_web): ?>
+			                            <tr>
+			                                <td>  </td>
+			                                <td class="font-dark">  </td>
+			                                <td class="font-dark">  </td>
+			                                <td align="right" class="font-dark"> <?=number_format($total_ingresos,2)?> </td>
+			                                <td align="right" class="font-dark"> <?=number_format($total_egresos,2)?> </td>
+			                                <td align="right" class="font-dark">  </td>
+			                            </tr>
+			                            <? endif; ?>
+			                        </tbody>
+			                    </table>
+			                </div>
+			                <? else: ?>
+			                <div class="alert alert-dismissable alert-success">
+								<p><?=$msg_val?></p>
+							</div>
+			                <? endif; ?>
+			            </div>
+			        </div>
+			        <!-- END BORDERED TABLE PORTLET-->
+			    </div>
+			</div>
+		</div>
 	</div>
 </div>
-
 
 
 

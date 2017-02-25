@@ -44,6 +44,7 @@ Version: 4.7.1
         <!-- BEGIN THEME GLOBAL STYLES -->
         <link href="assets/global/css/components-rounded.min.css" rel="stylesheet" id="style_components" type="text/css" />
         <link href="assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" />
+        <link href="assets/pages/css/invoice-2.min.css" rel="stylesheet" type="text/css" />
         <!-- END THEME GLOBAL STYLES -->
         <!-- BEGIN THEME LAYOUT STYLES -->
         <link href="assets/layouts/layout3/css/layout.min.css" rel="stylesheet" type="text/css" />
@@ -165,9 +166,6 @@ Version: 4.7.1
                                                 </li>
                                                 <li aria-haspopup="true">
                                                     <a href="?Modulo=Facturacion&Tipo=2" class="nav-link">Facturas Canceladas</a>
-                                                </li>
-                                                <li aria-haspopup="true">
-                                                    <a href="?Modulo=PreFacturas" class="nav-link">Pre Facturas</a>
                                                 </li>
                                             </ul>
                                         </li>
@@ -291,11 +289,8 @@ Version: 4.7.1
                     <div class="page-container">
                         <!-- BEGIN CONTENT -->
                         <div class="page-content-wrapper">
-                            <!-- BEGIN CONTENT BODY -->
-                           
-                            <!-- BEGIN PAGE CONTENT BODY -->
-                            <div class="page-content">
-                                <div class="container">
+                            <!-- NUEVO INICIO DE CONTENIDO -->
+							
                                     <?
                                 	switch($menu):
 							    		
@@ -341,6 +336,10 @@ Version: 4.7.1
 							    		include("presupuesto.php");	
 							    		break;
 							    		
+							    		case 'VerPresupuesto':
+							    		include("ver_presupuesto.php");	
+							    		break;
+							    		
 							    		/* Facturacion */
 							    		
 							    		case 'Facturacion':
@@ -357,10 +356,7 @@ Version: 4.7.1
 									endswitch;
 									
 									?>
-                                </div>
-                            </div>
-                            <!-- END PAGE CONTENT BODY -->
-                            <!-- END CONTENT BODY -->
+                                
                         </div>
                         <!-- END CONTENT -->
                         
@@ -441,7 +437,7 @@ Version: 4.7.1
 		        	window.open("login.php", "_self");
 	        	});
 	        	
-	        	$('.numero').numeric({allow:"."});
+	        	$('.numero').numeric({allow:".-+"});
 	        });
 	    </script>
     </body>

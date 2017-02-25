@@ -31,85 +31,88 @@ $val=count($facturas);
 }
 </style>
 <script src="assets/global/plugins/jquery.min.js" type="text/javascript"></script>
-<div class="page-content-inner">
-	<div class="row">
-		<div class="col-md-12">
-			<!-- BEGIN EXAMPLE TABLE PORTLET-->
-			<div class="portlet light  portlet-fit">
-				<div class="portlet-title">
-					<div class="caption">
-						<i class="icon-layers font-dark"></i>
-						<span class="caption-subject font-dark bold uppercase"><?=$titulo?></span>
+<div class="page-content">
+	<div class="container">    
+		<div class="page-content-inner">
+			<div class="row">
+				<div class="col-md-12">
+					<!-- BEGIN EXAMPLE TABLE PORTLET-->
+					<div class="portlet light  portlet-fit">
+						<div class="portlet-title">
+							<div class="caption">
+								<i class="icon-layers font-dark"></i>
+								<span class="caption-subject font-dark bold uppercase"><?=$titulo?></span>
+							</div>
+							<div class="actions btn-set">
+								<!--<a href="javascript:;" class="btn btn-sm blue " data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#nuevoPaciente"><i class="fa fa-plus"></i> Agregar paciente </a>-->
+							</div>
+						</div>
+						<div class="portlet-body">
+							<? if($val>0):?>
+							<table class="table table-striped table-bordered table-hover" id="tabla_facturas">
+								<thead>
+							        <tr>
+										<th>Fecha</th>
+										<th>Folio</th>
+										<th>RFC</th>
+										<th>Razón Social</th>
+										<th>Método</th>
+										<th>Total</th>
+										<th width="60"></th>
+							        </tr>
+							    </thead>
+							    <tbody>
+							      <? foreach($facturas as $factura): ?>
+							        <tr class="tr_<?=$factura->id_factura?>">
+										<td><?=devuelveFechaHora($factura->fecha_hora)?></td>
+										<td><?=$factura->serie?>-<?=$factura->folio?></td>
+										<td><?=$factura->receptor_rfc?></td>
+										<td><?=$factura->receptor_rs?></td>
+										<td><?=$factura->metodo_pago?></td>
+										<td align="right"><?=$factura->total?></td>
+										<td>
+											<img src="assets/global/img/loading-spinner-grey.gif" border="0" id="load_<?=$factura->id_factura?>" width="19" class="oculto" />
+											
+											
+											<div class="btn-group btn_<?=$factura->id_factura?>">
+		                                        <a class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" href="javascript:;" aria-expanded="false"> Opciones
+		                                            <i class="fa fa-angle-down"></i>
+		                                        </a>
+		                                        <ul class="dropdown-menu">
+			                                        <? if($factura->estado): ?>
+		                                            <li>
+		                                                <a href="javascript:;" onclick="javascript:Cancela(<?=$factura->id_factura?>)">Cancelar</a>
+		                                            </li>
+		                                            <li>
+		                                                <a href="javascript:;" onclick="javascript:Descarga(<?=$factura->id_factura?>)">Descargar</a>
+		                                            </li>
+		                                            <? else: ?>
+		                                            <li>
+		                                                <a href="javascript:;" onclick="javascript:Descarga(<?=$factura->id_factura?>)">Acuse de cancelación</a>
+		                                            </li>
+		                                            <? endif; ?>
+		                                        </ul>
+		                                    </div>
+		                                    
+										</td>
+							        </tr>
+							      <? endforeach; ?>
+							    </tbody>
+							</table>
+							<? else: ?>
+							<div class="alert alert-dismissable alert-warning">
+						  		<button type="button" class="close" data-dismiss="alert">×</button>
+						  		<p>Aún no se han generado facturas</p>
+						  	</div>
+							<? endif; ?>
+						</div>
 					</div>
-					<div class="actions btn-set">
-						<!--<a href="javascript:;" class="btn btn-sm blue " data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#nuevoPaciente"><i class="fa fa-plus"></i> Agregar paciente </a>-->
-					</div>
-				</div>
-				<div class="portlet-body">
-					<? if($val>0):?>
-					<table class="table table-striped table-bordered table-hover" id="tabla_facturas">
-						<thead>
-					        <tr>
-								<th>Fecha</th>
-								<th>Folio</th>
-								<th>RFC</th>
-								<th>Razón Social</th>
-								<th>Método</th>
-								<th>Total</th>
-								<th width="60"></th>
-					        </tr>
-					    </thead>
-					    <tbody>
-					      <? foreach($facturas as $factura): ?>
-					        <tr class="tr_<?=$factura->id_factura?>">
-								<td><?=devuelveFechaHora($factura->fecha_hora)?></td>
-								<td><?=$factura->serie?>-<?=$factura->folio?></td>
-								<td><?=$factura->receptor_rfc?></td>
-								<td><?=$factura->receptor_rs?></td>
-								<td><?=$factura->metodo_pago?></td>
-								<td align="right"><?=$factura->total?></td>
-								<td>
-									<img src="assets/global/img/loading-spinner-grey.gif" border="0" id="load_<?=$factura->id_factura?>" width="19" class="oculto" />
-									
-									
-									<div class="btn-group btn_<?=$factura->id_factura?>">
-                                        <a class="btn btn-xs btn-default dropdown-toggle" data-toggle="dropdown" href="javascript:;" aria-expanded="false"> Opciones
-                                            <i class="fa fa-angle-down"></i>
-                                        </a>
-                                        <ul class="dropdown-menu">
-	                                        <? if($factura->estado): ?>
-                                            <li>
-                                                <a href="javascript:;" onclick="javascript:Cancela(<?=$factura->id_factura?>)">Cancelar</a>
-                                            </li>
-                                            <li>
-                                                <a href="javascript:;" onclick="javascript:Descarga(<?=$factura->id_factura?>)">Descargar</a>
-                                            </li>
-                                            <? else: ?>
-                                            <li>
-                                                <a href="javascript:;" onclick="javascript:Descarga(<?=$factura->id_factura?>)">Acuse de cancelación</a>
-                                            </li>
-                                            <? endif; ?>
-                                        </ul>
-                                    </div>
-                                    
-								</td>
-					        </tr>
-					      <? endforeach; ?>
-					    </tbody>
-					</table>
-					<? else: ?>
-					<div class="alert alert-dismissable alert-warning">
-				  		<button type="button" class="close" data-dismiss="alert">×</button>
-				  		<p>Aún no se han generado facturas</p>
-				  	</div>
-					<? endif; ?>
+					<!-- END EXAMPLE TABLE PORTLET-->
 				</div>
 			</div>
-			<!-- END EXAMPLE TABLE PORTLET-->
 		</div>
 	</div>
 </div>
-
 
 
 
