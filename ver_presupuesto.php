@@ -12,6 +12,7 @@ if($valida):
 	$presupuesto=mysql_fetch_object($q);
 	//$presupuesto->fecha;
 	
+	//Sacamos los presupuestos
 	$productos=array();
 	$sql="SELECT * FROM books_presupuestos_producto WHERE id_presupuesto=$id_presupuesto";
 	$q=mysql_query($sql);
@@ -19,8 +20,21 @@ if($valida):
 		$productos[] = $datos;
 	endwhile;
 	$valida_productos=count($productos);
+	
+	//Validamos que tenga descuento
+	$sql="SELECT SUM(descuento) AS descuento FROM books_presupuestos_producto WHERE id_presupuesto=$id_presupuesto";
+	$q=mysql_query($sql);
+	$ft=mysql_fetch_assoc($q);
+	$valida_descuento=$ft['descuento'];
 
-?>							
+?>
+<style>
+.amounts {
+    margin-top: 0px;
+    font-size: 14px;
+    margin-right: 20px;
+}
+</style>						
 <div class="page-head">
     <div class="container">
         <!-- BEGIN PAGE TITLE -->
@@ -30,51 +44,8 @@ if($valida):
         <!-- END PAGE TITLE -->
         <!-- BEGIN PAGE TOOLBAR -->
         <div class="page-toolbar">
-            <!-- BEGIN THEME PANEL -->
-            <div class="btn-group btn-theme-panel hide">
-                <a href="javascript:;" class="btn dropdown-toggle" data-toggle="dropdown">
-                    <i class="icon-settings"></i>
-                </a>
-                <div class="dropdown-menu theme-panel pull-right dropdown-custom hold-on-click">
-                    <div class="row">
-                        <div class="col-md-12 col-sm-12 col-xs-12">
-                            <h3>HISTORIAL</h3>
-                            <div class="row">
-                                <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <ul class="theme-colors">
-                                        <li class="theme-color theme-color-default" data-theme="default">
-                                            <span class="theme-color-view"></span>
-                                            <span class="theme-color-name">Default</span>
-                                        </li>
-                                        <li class="theme-color theme-color-blue-hoki" data-theme="blue-hoki">
-                                            <span class="theme-color-view"></span>
-                                            <span class="theme-color-name">Blue Hoki</span>
-                                        </li>
-                                        <li class="theme-color theme-color-blue-steel" data-theme="blue-steel">
-                                            <span class="theme-color-view"></span>
-                                            <span class="theme-color-name">Blue Steel</span>
-                                        </li>
-                                        <li class="theme-color theme-color-yellow-orange" data-theme="yellow-orange">
-                                            <span class="theme-color-view"></span>
-                                            <span class="theme-color-name">Orange</span>
-                                        </li>
-                                        <li class="theme-color theme-color-yellow-crusta" data-theme="yellow-crusta">
-                                            <span class="theme-color-view"></span>
-                                            <span class="theme-color-name">Yellow Crusta</span>
-                                        </li>
-                                    </ul>
-                                </div>
-                                
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div>
-                
-                
-            </div>
-            <!-- END THEME PANEL -->
-            <button type="button" style="margin-top: 12px;" class="btn red-thunderbird">Convertir en Factura</button>
+            
+            <button type="button" style="margin-top: 12px;" class="btn red-thunderbird">Convertir en Invoice</button>
             
             <div class="btn-group" style="margin-top: 12px;">
 			    <a class="btn blue-chambray dropdown-toggle" data-toggle="dropdown" href="javascript:;" aria-expanded="false"> Opciones
@@ -118,8 +89,8 @@ if($valida):
 		        <div class="row invoice-head">
 		            <div class="col-md-7 col-xs-6">
 		                <div class="invoice-logo">
-		                    <img style="max-width: 330px;" src="files/<?=$presupuesto->logo;?>" class="img-responsive" alt=""  />
-		                    <h1 class="uppercase">Invoice</h1>
+		                    <img style="max-width: 300px;" src="files/<?=$presupuesto->logo;?>" class="img-responsive" alt=""  />
+		                    <h1 class="uppercase">Presupuesto</h1>
 		                </div>
 		            </div>
 		            <div class="col-md-5 col-xs-6">
@@ -142,11 +113,11 @@ if($valida):
 		            </div>
 		            <div class="col-xs-3">
 		                <h2 class="invoice-title uppercase" style="text-align: right">Emisión</h2>
-		                <p class="invoice-desc" style="text-align: right"><?=$presupuesto->fecha;?></p>
+		                <p class="invoice-desc" style="text-align: right"><?=fechaLetra($presupuesto->fecha);?></p>
 		            </div>
 		            <div class="col-xs-3">
 		                <h2 class="invoice-title uppercase" style="text-align: right">Vencimiento</h2>
-		                <p class="invoice-desc" style="text-align: right"><?=$presupuesto->fecha_expira;?></p>
+		                <p class="invoice-desc" style="text-align: right"><?=fechaLetra($presupuesto->fecha_expira);?></p>
 		            </div>
 		        </div>
 		        <? if($valida_productos): ?>
@@ -158,18 +129,60 @@ if($valida):
 		                            <th class="invoice-title uppercase">Descripción</th>
 		                            <th class="invoice-title uppercase text-center">Cantidad</th>
 		                            <th class="invoice-title uppercase text-center">Precio</th>
-		                            <th class="invoice-title uppercase text-center">Descuento</th>
+		                            <? if($valida_descuento>0): ?>
+			                            <th class="invoice-title uppercase text-center">Descuento</th>
+		                            <? endif; ?>
 		                            <th class="invoice-title uppercase text-center">Importe</th>
 		                        </tr>
 		                    </thead>
 		                    <tbody>
-			                    <? foreach($productos as $producto): ?>
+			                    <? foreach($productos as $producto): 
+				                    
+				                    $cantidad=$producto->cantidad;
+				                    $tarifa=$producto->tarifa;
+				                    
+				                    $subtotal=$cantidad*$tarifa;
+				                    
+				                    if($producto->descuento>0):
+				                    	$descuento=$producto->descuento;
+				                    	$porentaje=$descuento/100; 
+				                    	
+				                    	$monto_descuento = $subtotal*$porentaje;
+										$subtotal = $subtotal-$monto_descuento;
+				                    endif;
+				                    
+				                    if($producto->impuesto>0):
+										
+										$impuesto=$producto->impuesto;
+										$iva= $impuesto/100;
+										$monto_impuesto= $subtotal*$iva;
+										
+										$ivas+=$monto_impuesto;
+										
+									endif;
+									
+									$totales+=$subtotal;
+									$macizo=$totales+$ivas;
+									
+									if($presupuesto->ajuste_monto!="0.00"):
+										$ajuste=$presupuesto->ajuste_monto;
+										$macizo=$macizo+$ajuste;
+									endif;
+			                    ?>
 		                        <tr>
 		                            <td><?=$producto->producto?></td>
 		                            <td class="text-center sbold"><?=number_format($producto->cantidad,2)?></td>
 		                            <td class="text-center sbold"><?=number_format($producto->tarifa,2)?></td>
-		                            <td class="text-center sbold"><?=number_format($producto->descuento,2)?>%</td>
-		                            <td class="text-center sbold"><?=number_format($producto->importe,2)?></td>
+		                            <? if($valida_descuento>0): ?>
+			                            <td class="text-center sbold"><?
+				                            if($producto->descuento>0):
+					                        	echo number_format($producto->descuento,2)."%";
+				                            else:
+				                            	echo "N/A";
+				                            endif; ?>
+				                        </td>
+		                            <? endif; ?>
+		                            <td class="text-right sbold" style="padding-right: 10px;"><?=number_format($subtotal,2)?></td>
 		                        </tr>
 		                        <? endforeach; ?>
 		                    </tbody>
@@ -177,18 +190,53 @@ if($valida):
 		            </div>
 		        </div>
 		        <div class="row invoice-subtotal">
-		            <div class="col-xs-3">
-		                <h2 class="invoice-title uppercase">Subtotal</h2>
-		                <p class="invoice-desc">23,800$</p>
-		            </div>
-		            <div class="col-xs-3">
-		                <h2 class="invoice-title uppercase">Tax (0%)</h2>
-		                <p class="invoice-desc">0$</p>
-		            </div>
-		            <div class="col-xs-6">
-		                <h2 class="invoice-title uppercase">Total</h2>
-		                <p class="invoice-desc grand-total">23,800$</p>
-		            </div>
+			        
+			        
+
+                        <div class="col-xs-8">
+                            <div class="well">
+	                            <? if($presupuesto->notas): ?>
+                                <address>
+                                    <strong>Notas para el cliente</strong>
+                                    <br> <?=$presupuesto->notas?>
+                                </address>
+                                <? endif; ?>
+                                
+                                <? if($presupuesto->terminos): ?>
+                                <address>
+                                    <strong>Términos y condiciones</strong>
+                                    <br> <?=$presupuesto->terminos?>
+                                </address>
+                                <? endif; ?>
+                            </div>
+                        </div>
+                        <div class="col-xs-4">
+                            <table class="table ">
+                                                            
+                        	    <tbody>
+                        	        <tr>
+                        	            <td align="right"> SUBTOTAL: </td>
+                        	            <td align="right"> <?=number_format($totales,2)?> </td>
+                        	        </tr>
+                        	        <tr>
+                        	            <td align="right"> IVA: </td>
+                        	            <td align="right"> <?=number_format($ivas,2)?> </td>
+                        	        </tr>
+                        	        <tr>
+                        	            <td align="right"> <?=$presupuesto->ajuste_text?> </td>
+                        	            <td align="right"> <?=number_format($presupuesto->ajuste_monto,2)?> </td>
+                        	        </tr>
+                        	        <tr>
+                        	            <td align="right"> TOTAL: </td>
+                        	            <td align="right"> <?=number_format($macizo,2)?> </td>
+                        	        </tr>
+                        	    </tbody>
+                        	    
+                        	</table>
+                        </div>
+
+                    
+                    
 		        </div>
 		        <? endif; ?>
 		        <div class="row">

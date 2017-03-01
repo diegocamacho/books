@@ -43,7 +43,7 @@
         <div class="logo">
             <!--<a href="#">
                 <img src="logo.png" alt="" /> </a>-->
-                <h2 class="font-white">Dentixa App</h2>
+                <h2 class="font-white">AdminBooks App</h2>
         </div>
         <!-- END LOGO -->
         <!-- BEGIN LOGIN -->
@@ -80,7 +80,7 @@
 			</form>
             <!-- END LOGIN FORM -->
         </div>
-        <div class="copyright"> 2016 © Dentixa App. Powered by <a href="http://epicmedia.pro" target="_blank" >Epicmedia</a>. </div>
+        <div class="copyright"> 2017 © AdminBooks App. Powered by <a href="http://epicmedia.pro" target="_blank" >Epicmedia</a>. </div>
         <!--[if lt IE 9]>
 <script src="assets/global/plugins/respond.min.js"></script>
 <script src="assets/global/plugins/excanvas.min.js"></script> 
