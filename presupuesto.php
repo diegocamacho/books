@@ -297,32 +297,23 @@ function agregaProducto(){
 }
 
 function guardaPresupuesto(){
-	
 	App.blockUI({
 		boxed: true,
 		message: 'Creando presupuesto.'
 	});
-
 	$('#msg_error').hide('Fast');
-	
 	var datos=$('#frm-datos').serialize()+"&"+$('#frm-productos').serialize();
-	
-	$.post('ac/nuevo_presupuesto.php',datos,function(data){
-		var datos = data.split('|');
-	   	var valida=datos[0];
-	   	var referencia=datos[1];
-	    if(valida==1){
-		    alert("Presupuesto "+referencia);
-			//window.open("?Modulo=Presupuestos&msg=1", "_self");
-			App.unblockUI();
-	    }else{
-			$('#msg_error').html(referencia);
-			$('#msg_error').show('Fast');
-			App.unblockUI();
-	    }
+	$.getJSON('ac/nuevo_presupuesto.php',datos,function(data) {
+			console.log(data);
+			if(data.respuesta==1){
+				window.open("?Modulo=VerPresupuesto&id="+data.id_presupuesto, "_self");
+	    	}else{
+				$('#msg_error').html("Ocurrió un error, intenta nuevamente.");
+				$('#msg_error').show('Fast');
+				App.unblockUI();
+			}
 	});
-
-	//App.unblockUI('#blockui_sample_1_portlet_body');
+	
 }
 
 $(function(){

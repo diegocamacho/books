@@ -124,7 +124,7 @@ Version: 4.7.1
                                             </a>
                                             <ul class="dropdown-menu pull-left">
                                                 <li aria-haspopup="true">
-                                                    <a href="?Modulo=Presupuesto" class="nav-link">Presupuestos</a>
+                                                    <a href="?Modulo=Presupuestos" class="nav-link">Presupuestos</a>
                                                 </li>
                                                 <li aria-haspopup="true">
                                                     <a href="?Modulo=Facturas" class="nav-link">Facturas</a>
@@ -334,6 +334,10 @@ Version: 4.7.1
 							    		
 							    		case 'Presupuesto':
 							    		include("presupuesto.php");	
+							    		break;
+							    		
+							    		case 'Presupuestos':
+							    		include("presupuestos.php");	
 							    		break;
 							    		
 							    		case 'VerPresupuesto':

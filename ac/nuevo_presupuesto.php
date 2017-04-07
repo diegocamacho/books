@@ -3,8 +3,7 @@ include("../includes/session.php");
 include("../includes/db.php");
 include("../includes/funciones.php");
 
-extract($_POST);
-
+extract($_GET);
 //Validamos datos completos
 if(!$id_empresa) exit("Seleccione la empresa emisora del presupuesto.");
 if(!$id_cliente) exit("Seleccione el cliente receptor del presupuesto.");
@@ -52,8 +51,12 @@ if(!$fecha_expira) exit("Seleccione una fecha de expiración para el presupuesto
 	
 	if($error):
 		mysql_query('ROLLBACK');
-		exit("2|Ocurrió un error, intente nuevamente");
+		$ret['respuesta']='2';
+		$ret['id_presupuesto']='0';
 	else:
 		mysql_query('COMMIT');
-		echo "1|".$id_presupuesto;
+		$ret['respuesta']='1';
+		$ret['id_presupuesto']=$id_presupuesto;
 	endif;
+	
+	echo json_encode($ret);
