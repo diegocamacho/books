@@ -42,7 +42,7 @@ $val=count($presupuestos);
 							<table class="table table-striped table-bordered table-hover">
 								<thead>
 									<tr>
-										<th>Fecha</th>
+										<th>Fechawww</th>
 										<th>Empresa</th>
 										<th>Usuario</th>
 										<th>Cliente</th>
@@ -77,11 +77,23 @@ $val=count($presupuestos);
                                                         <a href="?Modulo=VerPresupuesto&id=<?=$presupuesto->id_presupuesto?>"> Ver </a>
                                                     </li>
                                                     <li>
-                                                        <a href="javascript:;"> Editar </a>
+                                                        <a href="?Modulo=Presupuesto&id=<?=$presupuesto->id_presupuesto?>"> Editar </a>
                                                     </li>
+													<li>
+													    <a href="javascript:;" > Clonar </a>
+													</li>
+													<li>
+													    <a href="javascript:;" > Cancelar </a>
+													</li>
+													<li>
+													    <a href="javascript:;" > Descargar PDF </a>
+													</li>
+													<li>
+													    <a href="javascript:;" > Envíar por Correo </a>
+													</li>
                                                     <li class="divider"> </li>
                                                     <li>
-                                                        <a href="javascript:;"> Cancelar </a>
+                                                        <a href="javascript:;"> Convertir en remisión </a>
                                                     </li>
                                                 </ul>
                                             </div>

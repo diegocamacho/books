@@ -23,11 +23,19 @@ if(!$_POST['pass']) exit("Debe escribir su contraseña");
 		if($num_result != 0){
 			while ($row=mysql_fetch_object($res))
 				{
+					$id_us=$row->id_usuario;
+					
+					$sql="SELECT id_empresa FROM books_usuarios_empresas WHERE id_usuario=$id_us LIMIT 1";
+					$q=mysql_query($sql);
+					$ft=mysql_fetch_assoc($q);
+					$id_empresa=$ft['id_empresa'];
+					
 					$_SESSION['s_id'] = $row->id_usuario;
 					$_SESSION['s_tipo'] = $row->id_tipo_usuario;
-					$_SESSION['s_id_clinica'] = $row->id_clinica;
+					$_SESSION['s_id_empresa'] = $id_empresa;
 					$_SESSION['s_nombre'] = $row->nombre;
 					$_SESSION['s_display'] = $row->foto;
+					$_SESSION['adminbooks'] = 1;
 				}
 			if(mysql_query("UPDATE usuarios SET ultimo_acceso='$fecha_hora' WHERE id_usuario='".$_SESSION['s_id']."'")){
 				echo "1";

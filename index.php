@@ -2,6 +2,16 @@
 include('includes/db.php'); 
 include('includes/funciones.php');
 $menu = isset($_GET['Modulo']) ? $_GET['Modulo']: NULL;
+
+$sql="SELECT books_usuarios_empresas.id_empresa,empresa FROM books_usuarios_empresas
+JOIN books_empresas ON books_empresas.id_empresa=books_usuarios_empresas.id_empresa
+WHERE id_usuario=$s_id_usuario AND books_empresas.activo=1 AND books_usuarios_empresas.id_empresa != $s_id_empresa";
+$q=mysql_query($sql);
+$empresas = array();
+while($datos=mysql_fetch_object($q)):
+	$empresas[] = $datos;
+endwhile;
+
 ?>
 <!DOCTYPE html>
 <!-- 
@@ -55,6 +65,7 @@ Version: 4.7.1
         <link href="js/dropzone.css" rel="stylesheet" type="text/css" />
         <link rel="shortcut icon" href="favicon.ico" /> </head>
         <script src="assets/global/plugins/jquery.min.js" type="text/javascript"></script>
+        <script src="js/numeral.min.js"></script>
 		<style>
 			.oculto{
 				display: none;
@@ -84,13 +95,33 @@ Version: 4.7.1
                                 <!-- END RESPONSIVE MENU TOGGLER -->
                                 <!-- BEGIN TOP NAVIGATION MENU -->
                                 <div class="top-menu">
+<!-- Empresas -->	                                
+	                                <div class="btn-group" style="margin-top: 10px;margin-right: 20px;">
+                    				    <button type="button" class="btn grey-steel dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    				        <i class="fa fa-industry"></i>
+                    				        <span class="hidden-sm hidden-xs"><?=dameDatosEmpresa($s_id_empresa)?></span>
+                    				        <i class="fa fa-angle-down"></i>
+                    				    </button>
+                    				    <ul class="dropdown-menu pull-right" role="menu">
+	                    				    <? foreach($empresas as $empresa):?>
+                    				        <li>
+                    				            <a href="javascript:;" onclick="cambiaEmpresa(<?=$empresa->id_empresa?>)"><?=$empresa->empresa?></a>
+                    				        </li>
+                    				        <? endforeach; ?>
+                    				        <li class="divider"> </li>
+                    				        <li>
+                    				            <a href="?Modulo=Empresas">Nueva Empresa</a>
+                    				        </li>
+                    				    </ul>
+                    				</div>
+<!-- Perfil -->                    				
                                     <ul class="nav navbar-nav pull-right">
                                         
                                         <!-- BEGIN USER LOGIN DROPDOWN -->
                                         <li class="dropdown dropdown-user dropdown-dark">
                                             <a href="javascript:;" class="dropdown-toggle" data-close-others="true">
                                                 <img alt="" class="img-circle" src="<? if($s_display){ echo "files/thumb_".$s_display; }else{ echo "files/bot_icon.png"; }?>">
-                                                <span class="username username-hide-mobile"><?=$s_nombre?><br><small><?= dameClinica($s_id_clinica); ?></small></span>
+                                                <span class="username username-hide-mobile"><?=$s_nombre?></span>
                                             </a>
                                         </li>
                                         <!-- END USER LOGIN DROPDOWN -->
@@ -124,10 +155,10 @@ Version: 4.7.1
                                             </a>
                                             <ul class="dropdown-menu pull-left">
                                                 <li aria-haspopup="true">
-                                                    <a href="?Modulo=Presupuestos" class="nav-link">Presupuestos</a>
+                                                    <a href="?Modulo=Ventas&Tipo=Presupuestos" class="nav-link">Presupuestos</a>
                                                 </li>
                                                 <li aria-haspopup="true">
-                                                    <a href="?Modulo=Facturas" class="nav-link">Facturas</a>
+                                                    <a href="?Modulo=Ventas&Tipo=Remisiones" class="nav-link">Remisiones</a>
                                                 </li>
                                                 <li aria-haspopup="true">
                                                     <a href="?Modulo=PagosRecibidos" class="nav-link">Pagos recibidos</a>
@@ -336,8 +367,8 @@ Version: 4.7.1
 							    		include("presupuesto.php");	
 							    		break;
 							    		
-							    		case 'Presupuestos':
-							    		include("presupuestos.php");	
+							    		case 'Ventas':
+							    		include("ventas.php");	
 							    		break;
 							    		
 							    		case 'VerPresupuesto':
@@ -424,7 +455,6 @@ Version: 4.7.1
         <script src="assets/global/scripts/app.js" type="text/javascript"></script>
         
         <!-- END THEME GLOBAL SCRIPTS -->
-
         <script src="assets/pages/scripts/components-date-time-pickers.js" type="text/javascript"></script>
         <script src="assets/pages/scripts/components-select2.js" type="text/javascript"></script>
         <script src="assets/pages/scripts/components-bootstrap-select.min.js" type="text/javascript"></script>
@@ -434,6 +464,7 @@ Version: 4.7.1
         <script src="assets/layouts/layout3/scripts/demo.min.js" type="text/javascript"></script>
         <script src="assets/layouts/global/scripts/quick-nav.min.js" type="text/javascript"></script>
         <script src="assets/jquery.alphanumeric.js" type="text/javascript"></script>
+        
         <!-- END THEME LAYOUT SCRIPTS -->
         <script>
 	        $(function(){
@@ -441,8 +472,20 @@ Version: 4.7.1
 		        	window.open("login.php", "_self");
 	        	});
 	        	
-	        	$('.numero').numeric({allow:".-+"});
+	        	$('.numero').numeric();
 	        });
+	        function cambiaEmpresa(id){
+		        App.blockUI();
+				var datos = "id="+id;
+				$.post('data/cambia_empresa.php',datos,function(data){
+					if(data==1){
+						location.reload();
+					}else{
+						App.unblockUI();
+						swal("Ocurrió un problema", data, "error");
+					}
+				});
+			}
 	    </script>
     </body>
 

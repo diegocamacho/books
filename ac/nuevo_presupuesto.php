@@ -4,34 +4,46 @@ include("../includes/db.php");
 include("../includes/funciones.php");
 
 extract($_GET);
+//echo json_encode($_GET);
+//print_r($_GET);
+//exit();
 //Validamos datos completos
-if(!$id_empresa) exit("Seleccione la empresa emisora del presupuesto.");
-if(!$id_cliente) exit("Seleccione el cliente receptor del presupuesto.");
-//if(!$referencia) exit("");
-if(!$fecha) exit("Seleccione una fecha para el presupuesto.");
-if(!$fecha_expira) exit("Seleccione una fecha de expiración para el presupuesto.");
-//if(!$ajuste_texto) exit("");
-//if(!$ajuste_monto) exit("");
-//if(!$notas) exit("");
-//if(!$terminos) exit("");
+if(!$fecha_expira):
+	$error=true;
+	$msg="Seleccione una fecha de vencimiento para el presupuesto.";
+endif;
 
-	if($fecha) $fecha=fechaBase2($fecha);
-	
-	if($fecha_expira) $fecha_expira=fechaBase2($fecha_expira);
+if(!$fecha):
+	$error=true;
+	$msg="Seleccione una fecha para el presupuesto.";
+endif;
 
-	//$nombre=limpiaStr($nombre,1,1);
+if(!$id_cliente):
+	$error=true;
+	$msg="Seleccione un cliente para crear el presupuesto.";
+endif;
 
-	
+$fecha 			= fechaBase2($fecha);
+$fecha_expira 	= fechaBase2($fecha_expira);
+
+
+if($error):
+	$ret['respuesta']='2';
+	$ret['id_presupuesto']='0';
+	$ret['mensaje']=$msg;
+	echo json_encode($ret);
+	exit();
+endif;
 
 	mysql_query('BEGIN');
 		
-	$sql="INSERT INTO books_presupuestos (id_usuario, id_empresa, id_cliente, fecha_hora_creacion, referencia, fecha, fecha_expira, notas, terminos, ajuste_text, ajuste_monto) 
-	VALUES ('$s_id_usuario','$id_empresa','$id_cliente','$fechahora','$referencia','$fecha','$fecha_expira', '$notas','$terminos','$ajuste_texto','$ajuste_monto')";
+	$sql="INSERT INTO books_ventas (id_usuario, id_empresa, id_cliente, fecha_hora_creacion, referencia, fecha, fecha_expira, notas, terminos, ajuste_text, ajuste_monto) 
+	VALUES ('$s_id_usuario','$s_id_empresa','$id_cliente','$fechahora','$referencia','$fecha','$fecha_expira', '$notas','$terminos','$ajuste_texto','$ajuste_monto')";
 	$qu=mysql_query($sql) or $error=true;
 	$id_presupuesto=mysql_insert_id();
 	
 	foreach($cantidad as $id => $val):
-		
+			
 		$producto_=$producto[$id];
 		$cant=$val;
 		$tarifa_=$tarifa[$id];
@@ -39,13 +51,22 @@ if(!$fecha_expira) exit("Seleccione una fecha de expiración para el presupuesto
 		$impuesto_=$impuesto[$id];
 		$importe_=$importe[$id];
 		
-		$sq=@mysql_query("INSERT INTO books_presupuestos_producto (id_presupuesto,producto,cantidad,tarifa,descuento,impuesto,importe)VALUES('$id_presupuesto','$producto_','$cant','$tarifa_','$descuento_','$impuesto_','$importe_')");
+		if(	(!trim($producto_))	||	(!trim($cant)) ):
+			$ret['respuesta']='2';
+			$ret['id_presupuesto']='0';
+			$ret['mensaje']='Asegurese que los campos del artículo (descripción y cantidad) estén llenos.';
+			echo json_encode($ret);
+			exit();
+		endif;
+		
+		
+		$sq=@mysql_query("INSERT INTO books_ventas_producto (id_venta,producto,cantidad,tarifa,descuento,impuesto,importe)VALUES('$id_presupuesto','$producto_','$cant','$tarifa_','$descuento_','$impuesto_','$importe_')");
 		if(!$sq) $error = true;
 		
 	endforeach;
 	
 	//Guardamos los logs
-	$sql="INSERT INTO books_logs_presupuestos (id_presupuesto,log,fecha_hora,tipo)VALUES('$id_presupuesto','EL USUARIO $s_nombre HA CREADO EL PRESUPUESTO.','$fechahora','1')";
+	$sql="INSERT INTO books_logs_ventas (id_venta,log,fecha_hora,tipo)VALUES('$id_presupuesto','EL USUARIO $s_nombre HA CREADO EL PRESUPUESTO.','$fechahora','1')";
 	$qu=mysql_query($sql) or $error=true;
 
 	
@@ -53,6 +74,7 @@ if(!$fecha_expira) exit("Seleccione una fecha de expiración para el presupuesto
 		mysql_query('ROLLBACK');
 		$ret['respuesta']='2';
 		$ret['id_presupuesto']='0';
+		$ret['mensaje']='Ocurrió un error al guardar, intente más tarde por favor.';
 	else:
 		mysql_query('COMMIT');
 		$ret['respuesta']='1';

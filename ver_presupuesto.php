@@ -1,11 +1,12 @@
 <?
 $id_presupuesto=$_GET['id'];
 //Sacamos la empresa del presupuesto
-$sql="SELECT referencia, fecha, fecha_expira, notas, terminos, ajuste_text, ajuste_monto, borrador, facturado, cliente, representante, empresa, direccion, ciudad, estado, codigo_postal, telefono_1, telefono_2, web, logo FROM books_presupuestos 
-JOIN books_usuarios_empresas ON books_usuarios_empresas.id_empresa=books_presupuestos.id_empresa 
-JOIN books_empresas ON books_empresas.id_empresa=books_presupuestos.id_empresa 
-JOIN books_clientes ON books_clientes.id_cliente=books_presupuestos.id_cliente 
-WHERE id_presupuesto=$id_presupuesto AND books_usuarios_empresas.id_usuario=$s_id_usuario AND books_presupuestos.activo=1";
+$sql="SELECT referencia, fecha, fecha_expira, notas, terminos, ajuste_text, ajuste_monto, borrador, facturado, cliente, representante, empresa, direccion, ciudad, books_empresas.estado, codigo_postal, telefono_1, telefono_2, web, logo FROM books_ventas 
+JOIN books_usuarios_empresas ON books_usuarios_empresas.id_empresa=books_ventas.id_empresa 
+JOIN books_empresas ON books_empresas.id_empresa=books_ventas.id_empresa 
+JOIN books_clientes ON books_clientes.id_cliente=books_ventas.id_cliente 
+WHERE id_venta=$id_presupuesto AND books_usuarios_empresas.id_usuario=$s_id_usuario";
+
 $q=mysql_query($sql);
 $valida=mysql_num_rows($q);
 if($valida):
@@ -14,7 +15,7 @@ if($valida):
 	
 	//Sacamos los presupuestos
 	$productos=array();
-	$sql="SELECT * FROM books_presupuestos_producto WHERE id_presupuesto=$id_presupuesto";
+	$sql="SELECT * FROM books_ventas_producto WHERE id_venta=$id_presupuesto";
 	$q=mysql_query($sql);
 	while($datos=mysql_fetch_object($q)):
 		$productos[] = $datos;
@@ -22,10 +23,18 @@ if($valida):
 	$valida_productos=count($productos);
 	
 	//Validamos que tenga descuento
-	$sql="SELECT SUM(descuento) AS descuento FROM books_presupuestos_producto WHERE id_presupuesto=$id_presupuesto";
+	$sql="SELECT SUM(descuento) AS descuento FROM books_ventas_producto WHERE id_venta=$id_presupuesto";
 	$q=mysql_query($sql);
 	$ft=mysql_fetch_assoc($q);
 	$valida_descuento=$ft['descuento'];
+	
+	//Mostramos los logs de la factura
+	$sql="SELECT log, fecha_hora FROM books_logs_ventas WHERE id_venta=$id_presupuesto";
+	$q=mysql_query($sql);
+	while($datos=mysql_fetch_object($q)):
+		$logs[] = $datos;
+	endwhile;
+	$valida_logs=count($logs);
 
 ?>
 <style>
@@ -79,17 +88,42 @@ if($valida):
 							
 
 <div class="page-content">
-	<div class="container">                   
-	                                
-	                                
-	                                
-	                                
+	<div class="container">	                                
 		<div class="page-content-inner">
-		    <div class="invoice-content-2 ">
+			
+			
+<!-- Logs -->	
+			<? if($valida_logs): ?>
+			<div class="row hidden-print">
+				<div class="col-md-12">
+					<div class="portlet box grey-mint">
+						<div class="portlet-title">
+                        	<div class="caption"><i class="fa fa-calendar-o"></i>Historial </div>
+							<div class="tools">
+								<a href="javascript:;" class="expand" data-original-title="" title="Mostrar historial"> </a>
+							</div>
+						</div>
+                        <div class="portlet-body portlet-collapsed">
+							<dl>
+								<? foreach($logs as $log): ?>
+                                <dt class="uppercase"><?=fechaHoraMeridian($log->fecha_hora)?></dt>
+                                <dd style="margin-bottom: 10px;"><?=$log->log?></dd>
+                                <? endforeach; ?>
+                            </dl>
+						</div>
+					</div>
+				</div>
+			</div>
+			<? endif; ?>
+			
+			
+			
+<!-- Presupuesto -->			
+		    <div class="invoice-content-2 ">	    
 		        <div class="row invoice-head">
 		            <div class="col-md-7 col-xs-6">
 		                <div class="invoice-logo">
-		                    <img style="max-width: 300px;" src="files/<?=$presupuesto->logo;?>" class="img-responsive" alt=""  />
+		                    <p><img style="max-width: 300px;" src="files/<? if($presupuesto->logo){ echo $presupuesto->logo; }else{ echo "tu-logo-min.jpg"; }?>" class="img-responsive <? if(!$presupuesto->logo){?>hidden-print<? } ?>" alt=""  /></p>
 		                    <h1 class="uppercase">Presupuesto</h1>
 		                </div>
 		            </div>
@@ -240,8 +274,10 @@ if($valida):
 		        </div>
 		        <? endif; ?>
 		        <div class="row">
-		            <div class="col-xs-12">
-		                <a class="btn btn-lg green-haze hidden-print uppercase print-btn" onclick="javascript:window.print();">Imprimir</a>
+		            <div class="col-xs-12" style="text-align: right">
+			            <a role="button" class="btn hidden-print btn-default btn-outline " href="javascript:history.back(1)">Regresar</a>&nbsp;&nbsp;
+		                <a class="btn hidden-print red-thunderbird btn-outline" onclick="javascript:window.print();">Imprimir</a>
+		                
 		            </div>
 		        </div>
 		    </div>

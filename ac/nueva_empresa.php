@@ -16,9 +16,9 @@ $nombre=limpiaStr($nombre,1,1);
 	$qu=mysql_query($sql) or $error=true;
 	$id_empresa=mysql_insert_id();
 	
-	//Caja chica
-	//$sql="INSERT INTO books_cuentas (id_empresa,alias,tipo_cuenta,fecha_creacion,eliminable)VALUES('$id_empresa','CAJA CHICA','1','$fecha','0')";
-	//$qu=mysql_query($sql) or $error=true;
+	//Ligamos el usuario
+	$sql="INSERT INTO books_usuarios_empresas (id_usuario,id_empresa)VALUES('$s_id_usuario','$id_empresa')";
+	$qu=mysql_query($sql) or $error=true;
 	
 	//Efectivo
 	$sql="INSERT INTO books_cuentas (id_empresa,alias,tipo_cuenta,fecha_creacion,eliminable)VALUES('$id_empresa','EFECTIVO','2','$fecha','0')";

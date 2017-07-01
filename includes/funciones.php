@@ -96,6 +96,12 @@ function fechaBase2($fecha){
 	$dia=(string)(int)$dia;
 	return $anio."-".$mes."-".$dia;
 }
+function fechaDeBase($fecha){ 
+	list($anio,$mes,$dia)=explode("-",$fecha); 
+
+	$dia=(string)(int)$dia;
+	return $dia."/".$mes."/".$anio;
+}
 //Para mostrar fecha
 function fechaSinHora($fecha){
 	return $fecha=substr($fecha,0,11);
@@ -329,7 +335,7 @@ function fechaLetraTres($fecha){
 	
 	}
 	$dia=$dia;
-	return $dia." ".$mest." ".$anio;
+	return $dia." de ".$mest." del ".$anio;
 }
 
 
@@ -541,49 +547,7 @@ function dias_restantes_mostrar($fecha_tarea){
 	return $en;
 	
 }
-function dameClinica($id_clinica){
-	global $conexion;
-	
-	$sql="SELECT clinica FROM clinicas WHERE id_clinica=$id_clinica";
-	$q=mysql_query($sql);
-	$ft=mysql_fetch_assoc($q);
-	
-	return $ft['clinica'];
-}
 
-function ultimaCita($id_paciente){
-	global $conexion;
-	
-	$sql="SELECT clinica, fecha_hora FROM citas 
-	JOIN clinicas ON clinicas.id_clinica=citas.id_clinica
-	WHERE id_paciente=$id_paciente ORDER BY id_cita DESC LIMIT 1";
-	$q=mysql_query($sql);
-	$ft=mysql_fetch_assoc($q);
-	$val=mysql_num_rows($q);
-	if($val):
-		return $ft['clinica']." ".devuelveFechaHora($ft['fecha_hora']);
-	else:
-		return "N/A";
-	endif;
-}
-function dameTipo($tipo){
-	if($tipo==1):
-		return "Caja Chica";
-	elseif($tipo==2):
-		return "Efectivo";
-	elseif($tipo==3):
-		return "Banco";
-	else:
-		return "Tipo no identificado";
-	endif;
-}
-function dameTipoEmpresa($tipo){
-	if($tipo==1):
-		return "Clínica";
-	else:
-		return "Empresa";
-	endif;
-}
 function dameIngresos($id_cuenta){
 	
 	$sql="SELECT SUM(monto) AS total_ingresos FROM books_ingresos WHERE id_cuenta=$id_cuenta";
@@ -653,4 +617,39 @@ function validaRFC($valor) {
         }else { 
             return false; 
         } 
+}
+function dameDatosEmpresa($id_empresa) { 
+	$sql="SELECT empresa FROM books_empresas WHERE id_empresa=$id_empresa";
+	$q=mysql_query($sql);
+	$dt=mysql_fetch_assoc($q);
+	return $dt['empresa'];
+}
+function dameEstado($estado){
+	if($estado==1){
+		$msg="Presupuesto";
+	}elseif($estado==2){
+		$msg="Borrador";
+	}elseif($estado==3){
+		$msg="Cancelado";
+	}elseif($estado==4){
+		$msg="Remisión";
+	}elseif($estado==5){
+		$msg="Remisión cancelada";
+	}else{
+		$msg="N/A";
+	}
+	
+	return $msg;
+}
+
+
+function billete($number, $precision = 2, $separator = '.')
+{
+    $numberParts = explode($separator, sprintf("%01.4f",$number));
+    $response = number_format($numberParts[0]);
+    if(count($numberParts)>1){
+        $response .= $separator;
+        $response .= substr($numberParts[1], 0, $precision);
+    }
+    return $response;
 }
