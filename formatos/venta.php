@@ -1,17 +1,17 @@
 <? set_time_limit(0); 
 include('../includes/db.php');
-include('../includes/session.php');
 include('../includes/num_letra.php');
 include('../includes/funciones.php');
 ob_start();
 //$color="#000000";
 $id_presupuesto=$_GET['id'];
+$id_usuario = $_GET['id_usuario'];
 //Sacamos la empresa del presupuesto
-$sql="SELECT referencia, fecha, fecha_expira, notas, terminos, ajuste_text, ajuste_monto, borrador, facturado, cliente, representante, empresa, direccion, ciudad, books_empresas.estado, codigo_postal, telefono_1, telefono_2, web, logo, color, colonia FROM books_ventas 
+$sql="SELECT referencia, fecha, fecha_expira, notas, terminos, ajuste_text, ajuste_monto, facturado, cliente, representante, empresa, direccion, ciudad, books_empresas.estado, codigo_postal, telefono_1, telefono_2, web, logo, color, colonia, books_ventas.estado FROM books_ventas 
 JOIN books_usuarios_empresas ON books_usuarios_empresas.id_empresa=books_ventas.id_empresa 
 JOIN books_empresas ON books_empresas.id_empresa=books_ventas.id_empresa 
 JOIN books_clientes ON books_clientes.id_cliente=books_ventas.id_cliente 
-WHERE id_venta=$id_presupuesto AND books_usuarios_empresas.id_usuario=$s_id_usuario";
+WHERE id_venta=$id_presupuesto AND books_usuarios_empresas.id_usuario=$id_usuario";
 
 $q=mysql_query($sql);
 $valida=mysql_num_rows($q);
@@ -20,6 +20,7 @@ if(!$valida):
 else:
 	$presupuesto=mysql_fetch_object($q);
 	$color=$presupuesto->color;
+	$estado=$presupuesto->estado;
 	
 	//Sacamos los presupuestos
 	$productos=array();
@@ -43,6 +44,24 @@ else:
 		$logs[] = $datos;
 	endwhile;
 	$valida_logs=count($logs);
+	
+	if($estado<=3){
+		$serie="PRE";
+		if($estado==1){
+			$titulo="Presupuesto";
+		}elseif($estado==2){
+			$titulo="Borrador de Presupuesto";
+		}elseif($estado==3){
+			$titulo="Presupuesto Cancelado";
+		}
+	}elseif($estado>3){
+		$serie="REM";
+		if($estado==4){
+			$titulo="Remisión";
+		}elseif($estado==5){
+			$titulo="Remisión Cancelada";
+		}
+	}
 endif;
 ?>
 <style>
@@ -146,7 +165,7 @@ table{
 			<? } ?>
 		</td>
     	<td width="323" height="20" valign="top" align="right">
-		    <h2 style="font-weight: bold; margin-top: 0px;">Presupuesto<br><small style="font-weight: 100;font-size: 16px;">#PRE-101</small></h2>
+		    <h2 style="font-weight: bold; margin-top: 0px;"><?=$titulo?><br><small style="font-weight: 100;font-size: 16px;">#<?=$serie?>-101</small></h2>
 			<!--<h3 style="font-weight: bold;"><small style="font-weight: 100;font-size: 16px;">Saldo adeudado<br></small>MXN 397,847.89</h3>-->
 		</td>
 	</tr>
@@ -191,7 +210,7 @@ table{
 <table width="705" cellpadding="0" cellspacing="0" class="borde-azul f12 m-left">
 	<thead>
     	<tr class="titulos">
-			<th width="23" height="25" class="f11">&nbsp;#</th>
+			<th width="23" height="25" class="f11">&nbsp;</th>
 			<th width="370" height="25" class="f11">&nbsp;&nbsp;Descripción</th>
 			<th width="40" height="25" class="f11" align="right">Cant. &nbsp;</th>
 			<th width="90" height="25" class="f11" align="right">Precio&nbsp;&nbsp;</th>
@@ -233,8 +252,8 @@ table{
 			endif;
 		?>
     	<tr style="margin-bottom: 10px;">
-			<td width="23" height="20">&nbsp;1</td>
-		    <td width="370" height="20">&nbsp;<?=$producto->producto?></td>
+			<td width="23" height="20">&nbsp;</td>
+		    <td width="370" height="20">&nbsp;<?=str_replace("\n","<br/>",$producto->producto)?></td>
 			<td width="40" height="20" align="right"><?=number_format($producto->cantidad,0)?>&nbsp;</td>
 			<td width="90" height="20" align="right"><?=billete($producto->tarifa)?>&nbsp;</td>
 			<td width="70" height="20" align="right">
@@ -311,7 +330,7 @@ table{
 		//$html2pdf = new HTML2PDF('L','A4','es', false, 'utf-8', array(0, 0, 0, 0));
 		$html2pdf->writeHTML($content_html, isset($_GET['vuehtml']));
 //		$html2pdf->createIndex('Sommaire', 25, 12, false, true, 1);
-		$html2pdf->Output('Factura_'.$tfd['UUID'].'.pdf');
+		$html2pdf->Output('../archivos_pdf/PDF_'.$id_presupuesto.'.pdf','F');
 	}
 	catch(HTML2PDF_exception $e) { echo $e; }
 

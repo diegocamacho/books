@@ -60,16 +60,20 @@ function validarEmail($email){
 	return filter_var($email, FILTER_VALIDATE_EMAIL);
 }
 //Formatear cadenas
-function limpiaStr($v,$base=false,$m=false){
- if($m){
- 	$v =  mb_convert_case($v, MB_CASE_UPPER, "UTF-8");
- }else{
-	$v =  mb_convert_case($v, MB_CASE_TITLE, "UTF-8"); 
- }
- if($base){
-	 $v = mysql_real_escape_string(strip_tags($v));
- }
- return  $v;
+function limpiaStr($v,$base=false,$m=false,$x=false){
+
+	if(!$x){
+		if($m){
+			$v =  mb_convert_case($v, MB_CASE_UPPER, "UTF-8");
+		}else{
+			$v =  mb_convert_case($v, MB_CASE_TITLE, "UTF-8"); 
+		}	 
+	}
+	
+	if($base){
+		$v = mysql_real_escape_string(strip_tags($v));
+	}
+	return  $v;
 }
 //Funcion para escapar
 function escapar($cadena,$numerico=false){
@@ -641,6 +645,67 @@ function dameEstado($estado){
 	
 	return $msg;
 }
+function getCuentasPorPagarMonto($id_cliente){
+	
+}
+
+function getCuentasPorCobrarMonto($id_cliente){
+	
+	
+	
+}
+
+function getMonto($id_venta){ /* OBTIENE EL MONTO FINAL DE LA VENTA */
+	global $conexion;
+	$sql = "SELECT*FROM books_ventas_producto WHERE id_venta = $id_venta";
+	$q = mysql_query($sql);
+
+	while($datos=mysql_fetch_object($q)):
+		$productos[] = $datos;
+	endwhile;
+	
+	$sql = "SELECT ajuste_monto FROM books_ventas WHERE id_venta = $id_venta";
+	$q = mysql_query($sql);
+	$presupuesto = mysql_fetch_object($q);
+	
+	
+	foreach($productos as $producto): 
+					                    
+		$cantidad=$producto->cantidad;
+		$tarifa=$producto->tarifa;
+		
+		$subtotal=$cantidad*$tarifa;
+		
+		if($producto->descuento>0):
+			$descuento=$producto->descuento;
+			$porentaje=$descuento/100; 
+			
+			$monto_descuento = $subtotal*$porentaje;
+			$subtotal = $subtotal-$monto_descuento;
+		endif;
+		
+		if($producto->impuesto>0):
+			
+			$impuesto=$producto->impuesto;
+			$iva= $impuesto/100;
+			$monto_impuesto= $subtotal*$iva;
+			
+			$ivas+=$monto_impuesto;
+			
+		endif;
+		
+		$totales+=$subtotal;
+		$macizo=$totales+$ivas;
+		
+		if($presupuesto->ajuste_monto!="0.00"):
+			$ajuste=$presupuesto->ajuste_monto;
+			$macizo=$macizo+$ajuste;
+		endif;
+		
+	endforeach;
+	
+	return $macizo;
+}
 
 
 function billete($number, $precision = 2, $separator = '.')
@@ -652,4 +717,59 @@ function billete($number, $precision = 2, $separator = '.')
         $response .= substr($numberParts[1], 0, $precision);
     }
     return $response;
+}
+
+class imCurlBitch {
+    private $curl;
+    private $id;
+
+    public function __construct() {
+        $this->id = time();
+    }
+
+    public function init() {
+        
+        $this->curl=curl_init();
+        
+        curl_setopt($this->curl, CURLOPT_USERAGENT,"Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.1) Gecko/2008070208 Firefox/3.0.1");
+        curl_setopt($this->curl, CURLOPT_COOKIEFILE,'cookies.txt');
+        curl_setopt($this->curl, CURLOPT_COOKIEJAR, 'cookies.txt');
+        curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($this->curl, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($this->curl, CURLOPT_RETURNTRANSFER,true);
+        curl_setopt($this->curl, CURLOPT_TIMEOUT, 60);
+        curl_setopt($this->curl, CURLOPT_AUTOREFERER, TRUE);
+	}
+
+    public function get($url) {
+        $this->init();
+        curl_setopt($this->curl, CURLOPT_URL, $url);
+        curl_setopt($this->curl, CURLOPT_POST,false);
+        curl_setopt($this->curl, CURLOPT_REFERER, '');
+        curl_setopt($this->curl, CURLOPT_FOLLOWLOCATION, TRUE);
+        $result=curl_exec ($this->curl);
+		/*  if($result === false){
+            echo curl_error($this->curl);
+        }*/
+        
+        $this->_close();
+        return $result;
+    }
+
+    public function post($url,$data) {
+        $this->init();
+
+        curl_setopt($this->curl, CURLOPT_URL, $url);
+        curl_setopt($this->curl, CURLOPT_POST,true);
+        curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($this->curl, CURLOPT_FOLLOWLOCATION, TRUE);
+        $result=curl_exec ($this->curl);
+        $this->_close();
+        return $result;
+    }
+
+    private function _close() {
+        curl_close($this->curl);
+    }
+
 }

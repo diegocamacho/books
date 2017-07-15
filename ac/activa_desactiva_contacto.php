@@ -6,14 +6,13 @@ extract($_POST);
 //print_r($_POST);
 //Validamos datos completos
 //if(!$tipo) exit("No llego el identificador de la operación");
-if(!$id_cuenta) exit("No llego el identificador de la cuenta");
+if(!$id) exit("No llego el identificador del contacto");
 
 //Updateamos el estado
-$sql="UPDATE books_tipos_ingreso SET activo='$tipo' WHERE id_tipo_ingreso=$id_cuenta AND eliminable=1";
+$sql="UPDATE books_contactos SET activo='$tipo' WHERE id_contacto=$id";
 $q=mysql_query($sql);
 if($q){
 	echo "1";
 }else{
-	echo "Ocurrió un error al desactivar la cuenta";
+	echo "Ocurrió un error al actualizar el usuario";
 }
-?>

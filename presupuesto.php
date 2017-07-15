@@ -1,5 +1,6 @@
 <?
-$sql="SELECT id_cliente,cliente FROM books_clientes WHERE activo=1";
+extract($_GET);
+$sql="SELECT id_cliente,cliente FROM books_clientes WHERE activo=1 AND (id_empresa=0 OR id_empresa=$s_id_empresa)";
 $q=mysql_query($sql);
 $clientes = array();
 while($datos=mysql_fetch_object($q)):
@@ -13,10 +14,9 @@ while($datos=mysql_fetch_object($q)):
 	$empresas[] = $datos;
 endwhile;
 */
-if($_GET['id']):
 
-	$id_presupuesto=$_GET['id'];
-	
+if($id):
+	$id_presupuesto=$id;
 	$sql="SELECT * FROM books_ventas WHERE id_venta=$id_presupuesto";
 	$q=mysql_query($sql);
 	$ft=mysql_fetch_assoc($q);
@@ -272,6 +272,7 @@ else:
 		                                    </div>
 		                                    <div class="row">
 			                                    <div class="col-md-12" style="text-align: right;margin-top: 28px;">
+				                                    <? if($id_presupuesto): ?> <input type="hidden" name="id_venta" value="<?=$id_presupuesto?>" /> <? endif; ?>
 													<a role="button" class="btn btn-default btn-outline hide" onclick="guardaPresupuesto(borrador)">Guardar como borrador</a>&nbsp;&nbsp;
 		
 													<a role="button" class="btn red-thunderbird btn-outline " onclick="guardaPresupuesto()">Guardar</a>&nbsp;&nbsp;
@@ -381,17 +382,20 @@ function agregaProducto(){
 	html+='</tr>';
 						
 	$('#tabla_productos').append(html);
+	autosize(document.querySelectorAll('textarea.autosizeme'));
 		
 }
 
 function guardaPresupuesto(){
-	//App.blockUI();
+	App.blockUI();
 	$('#msg_error').hide('Fast');
 	var datos=$('#frm-datos').serialize()+"&"+$('#frm-productos').serialize();
-	<? if($id_presupuesto): ?>
-	$.getJSON('ac/edita_presupuesto.php',datos,function(data) {
-	<? else: ?>
-	$.getJSON('ac/nuevo_presupuesto.php',datos,function(data) {
+	<? if(($id_presupuesto) && !isset($c)): ?>
+		$.getJSON('ac/edita_presupuesto.php',datos,function(data) {
+	<? elseif(($id_presupuesto) && isset($c)): ?>
+		$.getJSON('ac/nuevo_presupuesto.php',datos,function(data) {
+	<? elseif(!$id_presupuesto): ?>
+		$.getJSON('ac/nuevo_presupuesto.php',datos,function(data) {
 	<? endif; ?>
 			console.log(data);
 			if(data.respuesta==1){
@@ -399,7 +403,7 @@ function guardaPresupuesto(){
 	    	}else{
 				$('#msg_error').html(data.mensaje);
 				$('#msg_error').show('Fast');
-				//App.unblockUI();
+				App.unblockUI();
 			}
 	});
 	

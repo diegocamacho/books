@@ -72,12 +72,11 @@ if($valida):
         <!-- END PAGE TITLE -->
         <!-- BEGIN PAGE TOOLBAR -->
         <div class="page-toolbar">
-            <a href="?Modulo=EnviarCorreo&id=<?=$id_presupuesto?>" role="button" style="margin-top: 12px;" class="btn red-thunderbird">Enviar por Email</a>&nbsp;
-            <a href="data/download.php?id=<?=$id_presupuesto?>" role="button" style="margin-top: 12px;" class="btn red-thunderbird">PDF</a>&nbsp;
-            <a role="button" style="margin-top: 12px;" class="btn red-thunderbird">Convertir en Invoice</a>
+            
+            <button type="button" style="margin-top: 12px;" class="btn red-thunderbird">Convertir en Invoice</button>
             
             <div class="btn-group" style="margin-top: 12px;">
-			    <a class="btn blue-chambray dropdown-toggle" data-toggle="dropdown" href="javascript:;" aria-expanded="false">
+			    <a class="btn blue-chambray dropdown-toggle" data-toggle="dropdown" href="javascript:;" aria-expanded="false"> Opciones
 			        <i class="fa fa-angle-down"></i>
 			    </a>
 			    <ul class="dropdown-menu pull-right">
@@ -87,13 +86,14 @@ if($valida):
 			        <li>
 			            <a href="?Modulo=Presupuesto&id=<?=$venta->id_venta?>&c=1" > Clonar </a>
 			        </li>
-			        <!--
 			        <li>
 			            <? if($presupuesto->estado==1){ ?>
 							<a href="javascript:;" onclick="cancelaVenta(<?=$id_presupuesto?>,3)"> Cancelar </a>
 						<? }elseif($presupuesto->estado==2){ ?>
+							<!-- Borradores -->
 							<a href="javascript:;" onclick="cancelaVenta(<?=$id_presupuesto?>,1)"> Convertir en Presupuesto </a>
 						<? }elseif($presupuesto->estado==3){ ?>
+							<!-- Cancelados -->
 							<a href="javascript:;" onclick="cancelaVenta(<?=$id_presupuesto?>,1)"> Reactivar </a>
 						<? } ?>
 			        </li>
@@ -103,7 +103,7 @@ if($valida):
 			        <li>
 			            <a href="javascript:;" > Envíar por Correo </a>
 			        </li>
-			        -->
+			        
 			    </ul>
 			</div>
 
@@ -231,7 +231,7 @@ if($valida):
 									endif;
 			                    ?>
 		                        <tr>
-		                            <td><?=str_replace("\n", "<br/>", $producto->producto)?></td>
+		                            <td><?=$producto->producto?></td>
 		                            <td class="text-center sbold"><?=number_format($producto->cantidad,2)?></td>
 		                            <td class="text-center sbold"><?=number_format($producto->tarifa,2)?></td>
 		                            <? if($valida_descuento>0): ?>
@@ -239,7 +239,7 @@ if($valida):
 				                            if($producto->descuento>0):
 					                        	echo number_format($producto->descuento,2)."%";
 				                            else:
-				                            	echo "";
+				                            	echo "N/A";
 				                            endif; ?>
 				                        </td>
 		                            <? endif; ?>
@@ -255,15 +255,10 @@ if($valida):
 			        
 
                         <div class="col-xs-8">
-
-
-	                        <? if(($presupuesto->notas)||($presupuesto->terminos)): ?>
                             <div class="well">
-	                        <? endif; ?>
-	                            
 	                            <? if($presupuesto->notas): ?>
                                 <address>
-                                    <strong>Notas:</strong>
+                                    <strong>Notas para el cliente</strong>
                                     <br> <?=$presupuesto->notas?>
                                 </address>
                                 <? endif; ?>
@@ -274,11 +269,7 @@ if($valida):
                                     <br> <?=$presupuesto->terminos?>
                                 </address>
                                 <? endif; ?>
-                                
-	                        <? if(($presupuesto->notas)||($presupuesto->terminos)): ?>
                             </div>
-	                        <? endif; ?>
-
                         </div>
                         <div class="col-xs-4">
                             <table class="table ">

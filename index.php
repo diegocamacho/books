@@ -50,6 +50,7 @@ Version: 4.7.1
         <link href="assets/global/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/select2/css/select2-bootstrap.min.css" rel="stylesheet" type="text/css" />
         <link href="assets/global/plugins/bootstrap-select/css/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
+        <link href="assets/global/plugins/bootstrap-summernote/summernote.css" rel="stylesheet" type="text/css" />
         <!-- END PAGE LEVEL PLUGINS -->
         <!-- BEGIN THEME GLOBAL STYLES -->
         <link href="assets/global/css/components-rounded.min.css" rel="stylesheet" id="style_components" type="text/css" />
@@ -97,7 +98,7 @@ Version: 4.7.1
                                 <div class="top-menu">
 <!-- Empresas -->	                                
 	                                <div class="btn-group" style="margin-top: 10px;margin-right: 20px;">
-                    				    <button type="button" class="btn grey-steel dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    				    <button type="button" class="btn blue-chambray dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                     				        <i class="fa fa-industry"></i>
                     				        <span class="hidden-sm hidden-xs"><?=dameDatosEmpresa($s_id_empresa)?></span>
                     				        <i class="fa fa-angle-down"></i>
@@ -201,6 +202,8 @@ Version: 4.7.1
                                             </ul>
                                         </li>
                                         
+                                        <li <? if($menu=="Contactos"){ ?>class="active"<?}?>><a href="?Modulo=Contactos">Contactos</a></li>
+                                        
                                         <li aria-haspopup="true" class="menu-dropdown classic-menu-dropdown hide">
                                             <a href="javascript:;"> Reportes
                                                 <span class="arrow"></span>
@@ -281,9 +284,6 @@ Version: 4.7.1
                                                                         <a href="?Modulo=Cuentas"> Cuentas </a>
                                                                     </li>
                                                                     <li>
-                                                                        <a href="?Modulo=Clientes"> Clientes</a>
-                                                                    </li>
-                                                                    <li>
                                                                         <a href="?Modulo=Proveedores"> Proveedores </a>
                                                                     </li>
                                                                     <li>
@@ -347,10 +347,6 @@ Version: 4.7.1
 							    		include("cuentas_ingresos.php");	
 							    		break;
 							    		
-							    		case 'Proveedores':
-							    		include("proveedores.php");	
-							    		break;
-							    		
 							    		case 'Transacciones':
 							    		include("transacciones.php");	
 							    		break;
@@ -359,21 +355,34 @@ Version: 4.7.1
 							    		include("operaciones.php");	
 							    		break;
 							    		
-							    		case 'Clientes':
-							    		include("clientes.php");	
+							    		case 'Contactos':
+							    		include("contactos.php");	
+							    		break;
+							    		
+							    		case 'Contacto':
+							    		include("contacto.php");	
 							    		break;
 							    		
 							    		case 'Presupuesto':
 							    		include("presupuesto.php");	
 							    		break;
 							    		
-							    		case 'Ventas':
-							    		include("ventas.php");	
+							    		case 'Presupuestos':
+							    		include("presupuestos.php");	
 							    		break;
 							    		
 							    		case 'VerPresupuesto':
 							    		include("ver_presupuesto.php");	
 							    		break;
+							    		
+							    		case 'VerPresupuesto':
+							    		include("ver_presupuesto.php");	
+							    		break;
+							    		
+							    		case 'EnviarCorreo':
+							    		include("enviar_correo.php");	
+							    		break;
+
 							    		
 							    		/* Facturacion */
 							    		
@@ -429,6 +438,8 @@ Version: 4.7.1
         <script src="assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js" type="text/javascript"></script>
         <!-- END CORE PLUGINS -->
         <!-- BEGIN PAGE LEVEL PLUGINS -->
+        <script src="assets/global/plugins/bootstrap-summernote/summernote.min.js" type="text/javascript"></script>
+        <script src="assets/global/plugins/bootstrap-summernote/lang/summernote-es-ES.min.js" type="text/javascript"></script>
         <script src="assets/autosize.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-sweetalert/sweetalert.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/moment.min.js" type="text/javascript"></script>
@@ -439,15 +450,11 @@ Version: 4.7.1
         <script src="assets/global/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-datepicker/locales/bootstrap-datepicker.es.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js" type="text/javascript"></script>
-        
         <script src="assets/global/scripts/datatable.js" type="text/javascript"></script>
         <script src="assets/global/plugins/datatables/datatables.min.js" type="text/javascript"></script>
         <script src="assets/global/plugins/datatables/plugins/bootstrap/datatables.bootstrap.js" type="text/javascript"></script>
-		
 		<script src="assets/global/plugins/select2/js/select2.full.min.js" type="text/javascript"></script>
 		<script src="assets/global/plugins/bootstrap-select/js/bootstrap-select.min.js" type="text/javascript"></script>
-        
-        
         <script src="assets/global/plugins/echarts/echarts.js" type="text/javascript"></script>
         
         <!-- END PAGE LEVEL PLUGINS -->
@@ -457,8 +464,6 @@ Version: 4.7.1
         <!-- END THEME GLOBAL SCRIPTS -->
         <script src="assets/pages/scripts/components-date-time-pickers.js" type="text/javascript"></script>
         <script src="assets/pages/scripts/components-select2.js" type="text/javascript"></script>
-        <script src="assets/pages/scripts/components-bootstrap-select.min.js" type="text/javascript"></script>
-        
         <!-- BEGIN THEME LAYOUT SCRIPTS -->
         <script src="assets/layouts/layout3/scripts/layout.min.js" type="text/javascript"></script>
         <script src="assets/layouts/layout3/scripts/demo.min.js" type="text/javascript"></script>

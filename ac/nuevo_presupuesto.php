@@ -35,21 +35,26 @@ if($error):
 	exit();
 endif;
 
+	#1:presupuesto - 2:Borrador - 3:Presupuesto Cancelado - 4:Remisión - 5:Remisión Cancelada
+
 	mysql_query('BEGIN');
-		
-	$sql="INSERT INTO books_ventas (id_usuario, id_empresa, id_cliente, fecha_hora_creacion, referencia, fecha, fecha_expira, notas, terminos, ajuste_text, ajuste_monto) 
-	VALUES ('$s_id_usuario','$s_id_empresa','$id_cliente','$fechahora','$referencia','$fecha','$fecha_expira', '$notas','$terminos','$ajuste_texto','$ajuste_monto')";
+	$sql = "SELECT folio_presupuesto FROM books_ventas WHERE estado = 1 OR estado = 3 ORDER BY folio_presupuesto DESC LIMIT 1";
+	$ultimo_folio = @mysql_result(@mysql_query($sql), 0);
+	
+	$ultimo_folio++;
+	
+	$sql="INSERT INTO books_ventas (id_usuario, id_empresa, id_cliente, folio_presupuesto, fecha_hora_creacion, referencia, fecha, fecha_expira, notas, terminos, ajuste_text, ajuste_monto) 
+	VALUES ('$s_id_usuario','$s_id_empresa','$id_cliente','$ultimo_folio','$fechahora','$referencia','$fecha','$fecha_expira', '$notas','$terminos','$ajuste_texto','$ajuste_monto')";
 	$qu=mysql_query($sql) or $error=true;
 	$id_presupuesto=mysql_insert_id();
 	
 	foreach($cantidad as $id => $val):
 			
 		$producto_=$producto[$id];
-		$cant=$val;
+		$cant=abs($val);
 		$tarifa_=$tarifa[$id];
-		$descuento_=$descuento[$id];
-		$impuesto_=$impuesto[$id];
-		$importe_=$importe[$id];
+		$descuento_=abs($descuento[$id]);
+		$impuesto_=abs($impuesto[$id]);
 		
 		if(	(!trim($producto_))	||	(!trim($cant)) ):
 			$ret['respuesta']='2';
@@ -60,7 +65,7 @@ endif;
 		endif;
 		
 		
-		$sq=@mysql_query("INSERT INTO books_ventas_producto (id_venta,producto,cantidad,tarifa,descuento,impuesto,importe)VALUES('$id_presupuesto','$producto_','$cant','$tarifa_','$descuento_','$impuesto_','$importe_')");
+		$sq=@mysql_query("INSERT INTO books_ventas_producto (id_venta,producto,cantidad,tarifa,descuento,impuesto)VALUES('$id_presupuesto','$producto_','$cant','$tarifa_','$descuento_','$impuesto_')");
 		if(!$sq) $error = true;
 		
 	endforeach;
@@ -74,7 +79,7 @@ endif;
 		mysql_query('ROLLBACK');
 		$ret['respuesta']='2';
 		$ret['id_presupuesto']='0';
-		$ret['mensaje']='Ocurrió un error al guardar, intente más tarde por favor.';
+		$ret['mensaje']='Ocurrió un error al guardar, intente más tarde por favor. [1]';
 	else:
 		mysql_query('COMMIT');
 		$ret['respuesta']='1';
