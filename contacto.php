@@ -5,6 +5,7 @@ if($id_contacto):
 
 	$sql="SELECT * FROM books_contactos 
 	LEFT JOIN books_contactos_personas ON books_contactos_personas.id_contacto=books_contactos.id_contacto 
+	LEFT JOIN books_contactos_facturacion ON books_contactos_facturacion.id_contacto=books_contactos.id_contacto
 	WHERE books_contactos.id_contacto=$id_contacto AND principal=1 AND id_empresa=$s_id_empresa";
 	$q = mysql_query($sql);
 	$datos=mysql_fetch_assoc($q);
@@ -15,6 +16,17 @@ if($id_contacto):
 	$principal_nombre=$datos['nombre'];
 	$principal_email=$datos['email'];
 	$tipo=$datos['tipo'];
+	//Facturacion
+	$razon_social=$datos['razon_social'];
+	$rfc=$datos['rfc'];
+	$calle=$datos['calle'];
+	$n_exterior=$datos['n_exterior'];
+	$n_interior=$datos['n_interior'];
+	$colonia=$datos['colonia'];
+	$cp=$datos['cp'];
+	$localidad=$datos['localidad'];
+	$municipio=$datos['municipio'];
+	$estado=$datos['estado'];
 	
 	// Contactos
 	$sql="SELECT * FROM books_contactos_personas WHERE id_contacto=$id_contacto AND principal=0";
@@ -85,7 +97,7 @@ endif;
 									</div>
 									
 									<div class="form-group">
-										<label for="nombre" class="col-md-2 control-label">Empresa</label>
+										<label for="nombre" class="col-md-2 control-label">Nombre Comercial</label>
 										<div class="col-md-6">
 											<input type="text" maxlength="128" class="form-control dat" name="empresa" autocomplete="off" value="<?=$cliente?>">
 										</div>
@@ -108,6 +120,110 @@ endif;
 										</div>
 									</div>
 									
+									<br><br>
+									<h4>Datos Físcales</h4>
+									<br>
+									
+									<div class="form-group">
+										<label for="rfc" class="col-sm-2 control-label">Razón Social:</label>
+										<div class="col-sm-6">
+											<input type="text" class="form-control limpia" id="razon_social" name="razon_social" value="<?=$razon_social?>">
+    									</div>
+  									</div>
+									
+									<div class="form-group">
+										<label for="rfc" class="col-sm-2 control-label">RFC:</label>
+										<div class="col-sm-4">
+											<input type="text" class="form-control limpia" id="rfc" name="rfc" value="<?=$rfc?>">
+    									</div>
+  									</div>
+  									
+  									<div class="form-group">
+										<label for="rfc" class="col-sm-2 control-label">Calle:</label>
+										<div class="col-sm-10">
+											<input type="text" class="form-control limpia" id="calle" name="calle" value="<?=$calle?>">
+    									</div>
+  									</div>
+  									
+  									<div class="form-group">
+										<label for="rfc" class="col-sm-2 control-label">Número Exterior:</label>
+										<div class="col-sm-4">
+											<input type="text" class="form-control limpia" id="n_exterior" name="n_exterior" value="<?=$n_exterior?>">
+    									</div>
+    									
+    									<label for="rfc" class="col-sm-2 control-label">Número Interior:</label>
+										<div class="col-sm-4">
+											<input type="text" class="form-control limpia" id="n_interior" name="n_interior" placeholder="Opcional" value="<?=$n_interior?>">
+    									</div>
+  									</div>
+  									
+  									<div class="form-group">
+										<label for="rfc" class="col-sm-2 control-label">Colonia:</label>
+										<div class="col-sm-5">
+											<input type="text" class="form-control limpia" id="colonia" name="colonia" value="<?=$colonia?>">
+    									</div>
+    									
+    									<label for="rfc" class="col-sm-2 control-label">Código Postal:</label>
+										<div class="col-sm-3">
+											<input type="text" class="form-control limpia" id="cp" name="cp" value="<?=$cp?>">
+    									</div>
+  									</div>
+  									
+  									<div class="form-group">
+										<label for="rfc" class="col-sm-2 control-label">Localidad:</label>
+										<div class="col-sm-4">
+											<input type="text" class="form-control limpia" id="localidad" name="localidad" value="<?=$localidad?>">
+    									</div>
+    									
+    									<label for="rfc" class="col-sm-2 control-label">Delegación o Municipio:</label>
+										<div class="col-sm-4">
+											<input type="text" class="form-control limpia" id="municipio" name="municipio" value="<?=$municipio?>">
+    									</div>
+  									</div>
+  									
+  									<div class="form-group">
+										<label for="rfc" class="col-sm-2 control-label">Estado:</label>
+										<div class="col-sm-4">
+											<select name="estado" id="estado" class="form-control">
+												<option value="0">Seleccione Estado</option>
+												<option <? if($estado=="AGUASCALIENTES"){ ?> selected="1" <? } ?> value="AGUASCALIENTES">Aguascalientes</option>
+												<option <? if($estado=="BAJA CALIFORNIA"){ ?> selected="1" <? } ?> value="BAJA CALIFORNIA">Baja California</option>
+												<option <? if($estado=="BAJA CALIFORNIA SUR"){ ?> selected="1" <? } ?> value="BAJA CALIFORNIA SUR">Baja California Sur</option>
+												<option <? if($estado=="CAMPECHE"){ ?> selected="1" <? } ?> value="CAMPECHE">Campeche</option>
+												<option <? if($estado=="CHIAPAS"){ ?> selected="1" <? } ?> value="CHIAPAS">Chiapas</option>
+												<option <? if($estado=="CHIHUAHUA"){ ?> selected="1" <? } ?> value="CHIHUAHUA">Chihuahua</option>
+												<option <? if($estado=="COAHUILA"){ ?> selected="1" <? } ?> value="COAHUILA">Coahuila</option>
+												<option <? if($estado=="COLIMA"){ ?> selected="1" <? } ?> value="COLIMA">Colima</option>
+												<option <? if($estado=="CIUDAD DE MEXICO"){ ?> selected="1" <? } ?> value="CIUDAD DE MEXICO">Ciudad de México</option>
+												<option <? if($estado=="DISTRITO FEDERAL"){ ?> selected="1" <? } ?> value="DISTRITO FEDERAL">Distrito Federal</option>
+												<option <? if($estado=="CIUDAD DE MEXICO"){ ?> selected="1" <? } ?> value="CIUDAD DE MEXICO">Ciudad de México</option>
+												<option <? if($estado=="DURANGO"){ ?> selected="1" <? } ?> value="DURANGO">Durango</option>
+												<option <? if($estado=="ESTADO DE MEXICO"){ ?> selected="1" <? } ?> value="ESTADO DE MEXICO">Estado de México</option>
+												<option <? if($estado=="GUANAJUATO"){ ?> selected="1" <? } ?> value="GUANAJUATO">Guanajuato</option>
+												<option <? if($estado=="GUERRERO"){ ?> selected="1" <? } ?> value="GUERRERO">Guerrero</option>
+												<option <? if($estado=="HIDALGO"){ ?> selected="1" <? } ?> value="HIDALGO">Hidalgo</option>
+												<option <? if($estado=="JALISCO"){ ?> selected="1" <? } ?> value="JALISCO">Jalisco</option>
+												<option <? if($estado=="MICHOACAN"){ ?> selected="1" <? } ?> value="MICHOACAN">Michoacán</option>
+												<option <? if($estado=="MORELOS"){ ?> selected="1" <? } ?> value="MORELOS">Morelos</option>
+												<option <? if($estado=="NAYARIT"){ ?> selected="1" <? } ?> value="NAYARIT">Nayarit</option>
+												<option <? if($estado=="NUEVO LEON"){ ?> selected="1" <? } ?> value="NUEVO LEON">Nuevo León</option>
+												<option <? if($estado=="OAXACA"){ ?> selected="1" <? } ?> value="OAXACA">Oaxaca</option>
+												<option <? if($estado=="PUEBLA"){ ?> selected="1" <? } ?> value="PUEBLA">Puebla</option>
+												<option <? if($estado=="QUERETARO"){ ?> selected="1" <? } ?> value="QUERETARO">Querétaro</option>
+												<option <? if($estado=="QUINTANA ROO"){ ?> selected="1" <? } ?> value="QUINTANA ROO">Quintana Roo</option>
+												<option <? if($estado=="SAN LUIS POTOSI"){ ?> selected="1" <? } ?> value="SAN LUIS POTOSI">San Luis Potosí</option>
+												<option <? if($estado=="SINALOA"){ ?> selected="1" <? } ?> value="SINALOA">Sinaloa</option>
+												<option <? if($estado=="SONORA"){ ?> selected="1" <? } ?> value="SONORA">Sonora</option>
+												<option <? if($estado=="TABASCO"){ ?> selected="1" <? } ?> value="TABASCO">Tabasco</option>
+												<option <? if($estado=="TAMAULIPAS"){ ?> selected="1" <? } ?> value="TAMAULIPAS">Tamaulipas</option>
+												<option <? if($estado=="TLAXCALA"){ ?> selected="1" <? } ?> value="TLAXCALA">Tlaxcala</option>
+												<option <? if($estado=="VERACRUZ"){ ?> selected="1" <? } ?> value="VERACRUZ">Veracruz</option>
+												<option <? if($estado=="YUCATAN"){ ?> selected="1" <? } ?> value="YUCATAN">Yucatán</option>
+												<option <? if($estado=="ZACATECAS"){ ?> selected="1" <? } ?> value="ZACATECAS">Zacatecas</option>
+											</select>
+    									</div>
+  									</div>
+  									
 									<br><br>
 									<h4>Contactos Adicionales &nbsp;&nbsp;&nbsp;<a role="button" class="btn red-thunderbird btn-outline btn-xs" onclick="agregaContacto()">Nuevo</a></h4>
 									<br>
@@ -203,7 +319,11 @@ function guardaCliente(){
 	$.post('ac/contacto.php',datos,function(data){
 		console.log(data);
 	    if(data==1){
-			window.open("?Modulo=Clientes&msg=1", "_self");
+			<? if($id_contacto){ ?>
+		    window.open("?Modulo=Contactos&msg=2", "_self");
+		    <? }else{ ?>
+		    window.open("?Modulo=Contactos&msg=1", "_self");
+		    <? } ?>
 	    }else{
 	    	alert(data);
 			App.unblockUI();

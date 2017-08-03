@@ -21,6 +21,26 @@ if($empresa):
 	$empresa=limpiaStr($empresa,1,1);
 endif;
 
+if($razon_social):
+	$razon_social=limpiaStr($razon_social,1,1);
+endif;
+
+//Datos de facturación
+
+if(!$rfc): 
+	exit("Debe escribir el nombre del contacto.");
+else:
+	$rfc=limpiaStr($rfc,1,1);
+endif;
+
+if($calle): $calle=limpiaStr($rfc,1,1); endif;
+if($n_exterior): $n_exterior=limpiaStr($n_exterior,1,1); endif;
+if($n_interior): $n_interior=limpiaStr($n_interior,1,1); endif;
+if($colonia): $colonia=limpiaStr($colonia,1,1); endif;
+if($cp): $cp=limpiaStr($cp,1,1); endif;
+if($localidad): $localidad=limpiaStr($localidad,1,1); endif;
+if($municipio): $municipio=limpiaStr($municipio,1,1); endif;
+
 mysql_query('BEGIN');
 
 if($id_contacto):
@@ -31,22 +51,27 @@ if($id_contacto):
 	$sql="UPDATE books_contactos_personas SET nombre='$principal_nombre', email='$principal_email' WHERE id_contacto='$id_contacto' AND principal=1";
 	$q=mysql_query($sql) or $error=true;
 	
-	foreach($contacto_nombre as $id => $val):
+	$sql="UPDATE books_contactos_facturacion SET razon_social='$razon_social', rfc='$rfc', calle='$calle', n_exterior='$n_exterior', n_interior='$n_interior', colonia='$colonia', cp='$cp', localidad='$localidad', municipio='$municipio', estado='$estado' WHERE id_contacto='$id_contacto'";
+	$q=mysql_query($sql) or $error=true;
 	
-		$nombre_=$contacto_nombre[$id];
-		$email_=$contacto_email[$id];
-			
-		if((!trim($nombre_))	||	(!trim($email_))):
-			exit("Los contactos adicionales no pueden tener campos vacios.");
-		endif;
+	if($contacto_nombre):
+		foreach($contacto_nombre as $id => $val):
 		
-		$nombre_=limpiaStr($nombre_,1,1);
-		$email_=limpiaStr($email_,1,1,1);
-		
-		$sq=@mysql_query("INSERT INTO books_contactos_personas (id_contacto,nombre,email)VALUES('$id_contacto','$nombre_','$email_')");
-		if(!$sq) $error = true;
+			$nombre_=$contacto_nombre[$id];
+			$email_=$contacto_email[$id];
+				
+			if((!trim($nombre_))	||	(!trim($email_))):
+				exit("Los contactos adicionales no pueden tener campos vacios.");
+			endif;
 			
-	endforeach;
+			$nombre_=limpiaStr($nombre_,1,1);
+			$email_=limpiaStr($email_,1,1,1);
+			
+			$sq=@mysql_query("INSERT INTO books_contactos_personas (id_contacto,nombre,email)VALUES('$id_contacto','$nombre_','$email_')");
+			if(!$sq) $error = true;
+				
+		endforeach;
+	endif;
 
 else:
 	
@@ -55,6 +80,9 @@ else:
 	$id_contacto=mysql_insert_id();
 	
 	$sql="INSERT INTO books_contactos_personas (id_contacto,nombre,email,principal)VALUES('$id_contacto','$principal_nombre','$principal_email','1')";
+	$q=mysql_query($sql) or $error=true;
+	
+	$sql="INSERT INTO books_contactos_facturacion (id_contacto,razon_social,rfc,calle,n_exterior,n_interior,colonia,cp,localidad,municipio,estado)VALUES('$id_contacto','$razon_social','$rfc','$calle','$n_exterior','$n_interior','$colonia','$cp','$localidad','$municipio','$estado')";
 	$q=mysql_query($sql) or $error=true;
 
 
@@ -85,5 +113,5 @@ if($error):
 	exit('Ocurrió un error al guardar, intente más tarde por favor.');
 else:
 	mysql_query('COMMIT');
-	echo "ok";
+	echo "1";
 endif;

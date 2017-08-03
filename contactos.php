@@ -1,5 +1,16 @@
 <?
-$sql = "SELECT books_contactos.*, books_contactos.empresa FROM books_contactos LEFT JOIN books_empresas ON books_empresas.id_empresa=books_contactos.id_empresa WHERE (books_contactos.id_empresa=0 OR books_contactos.id_empresa=$s_id_empresa) ORDER BY books_contactos.empresa ASC";
+if($_GET['Tipo']):
+	$cons=" AND tipo=".$_GET['Tipo'];
+endif;
+/*$sql = "SELECT books_contactos.*, books_contactos.empresa FROM books_contactos 
+LEFT JOIN books_empresas ON books_empresas.id_empresa=books_contactos.id_empresa 
+LEFT JOIN books_contactos_personas ON books_contactos_personas.id_contacto=books_contactos.id_contacto 
+WHERE principal=1 $cons (books_contactos.id_empresa=0 OR books_contactos.id_empresa=$s_id_empresa) 
+ORDER BY books_contactos.empresa ASC";*/
+$sql="SELECT books_contactos.*, nombre, email FROM books_contactos 
+JOIN books_contactos_personas ON books_contactos_personas.id_contacto=books_contactos.id_contacto 
+WHERE books_contactos_personas.principal=1 $cons AND books_contactos.id_empresa=$s_id_empresa
+ORDER BY books_contactos.empresa ASC";
 $q=mysql_query($sql);
 
 $contactos = array();
@@ -46,7 +57,12 @@ $val=count($contactos);
 								<span class="caption-subject font-dark bold uppercase">Contactos</span>
 							</div>
 							<div class="actions btn-set">
-								<a href="?Modulo=Contacto" class="btn btn-sm blue-chambray "><i class="fa fa-plus"></i> Agregar Contacto </a>
+								<? if($_GET['Tipo']): ?>
+								<a href="?Modulo=Contactos" class="btn btn-sm btn-default "> Todos </a> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+								<? endif; ?>
+								<a href="?Modulo=Contactos&Tipo=1" class="btn btn-sm btn-default "> Clientes </a> 
+								<a href="?Modulo=Contactos&Tipo=2" class="btn btn-sm btn-default "> Proveedores </a> &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+								<a href="?Modulo=Contacto" class="btn btn-sm btn-default "><i class="fa fa-plus"></i> Nuevo Contacto </a> 
 							</div>
 						</div>
 						<div class="portlet-body">
@@ -58,6 +74,7 @@ $val=count($contactos);
 							          <th>Empresa</th>
 							          <th>Teléfono</th>
 							          <th>Email</th>
+							          <th>Tipo</th>
 							          <th width="150">Cuentas por Cobrar</th>
 							          <th width="150">Cuentas por Pagar</th>
 							          <th width="150"></th>
@@ -66,10 +83,11 @@ $val=count($contactos);
 							      <tbody>
 								    <? foreach($contactos as $contacto): ?>  
 							        <tr class="tr_<?=$contacto->id_contacto?>">
-										<td><?=$contacto->representante?></td>
+										<td><?=$contacto->nombre?></td>
 										<td><?=$contacto->empresa?></td>
 										<td><?=$contacto->telefono?></td>
 										<td><?=$contacto->email?></td>
+										<td><? if($contacto->tipo==1){ echo "Cliente"; }else{ echo "Proveedor"; }?></td>
 										<td><?=getCuentasPorCobrarMonto($contacto->id_contacto)?></td>
 										<td><?=getCuentasPorPagarMonto($contacto->id_contacto)?></td>
 										<td align="right">
@@ -85,7 +103,7 @@ $val=count($contactos);
 							<? else: ?>
 							<div class="alert alert-dismissable alert-warning">
 						  		<button type="button" class="close" data-dismiss="alert">×</button>
-						  		<p>Aún no se han creado clientes</p>
+						  		<p>Aún no se han creado contactos</p>
 						  	</div>
 							<? endif; ?>
 						</div>
